@@ -4,7 +4,9 @@ const Home = () => {
 	return (
 		<>
 			<Head title="Home" />
-			<p>homeaaa</p>
+			<main className="bg-black min-h-screen w-full">
+				<h1 className="text-white">Bem-vindo</h1>
+			</main>
 		</>
 	);
 };

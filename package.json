@@ -10,6 +10,7 @@
         "@types/node": "^22.15.3",
         "@types/react": "^19.1.2",
         "@types/react-dom": "^19.1.3",
+        "@types/ziggy-js": "^1.8.0",
         "axios": "^1.8.2",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.2.0",
@@ -21,12 +22,18 @@
     "dependencies": {
         "@inertiajs/inertia-react": "^0.8.1",
         "@inertiajs/react": "^2.0.8",
+        "@radix-ui/react-label": "^2.1.4",
+        "@radix-ui/react-slot": "^1.2.0",
         "@vitejs/plugin-react": "^4.4.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide-react": "^0.503.0",
+        "next-themes": "^0.4.6",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
-        "tailwind-merge": "^3.2.0"
+        "sonner": "^2.0.3",
+        "tailwind-merge": "^3.2.0",
+        "ziggy-js": "^2.5.2",
+        "zod": "^3.24.3"
     }
 }

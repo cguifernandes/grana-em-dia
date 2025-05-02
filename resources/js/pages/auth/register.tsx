@@ -25,7 +25,7 @@ const Register = () => {
 				</div>
 				<Card className="max-w-xl w-full">
 					<CardHeader>
-						<CardTitle>Criar conta</CardTitle>
+						<CardTitle className="text-xl">Criar conta</CardTitle>
 						<CardDescription>
 							Preencha seus dados para criar uma nova conta.
 						</CardDescription>

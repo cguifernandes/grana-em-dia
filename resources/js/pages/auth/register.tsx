@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registerSchema, registerSchemaType } from "@/utils/zod/registerSchema";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, router, useForm } from "@inertiajs/react";
 import { toast } from "sonner";
 
 const Register = () => {
@@ -47,6 +47,10 @@ const Register = () => {
 			post(route("register.store"), {
 				onSuccess: () => {
 					toast.success("Conta criada com sucesso!");
+
+					router.push({
+						url: "/login",
+					});
 				},
 				onError: () => {
 					toast.error("Erro ao criar conta.");

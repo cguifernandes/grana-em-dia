@@ -37,11 +37,8 @@ class RegisterController extends Controller
             'passwordConfirmation.same' => 'As senhas não coincidem.',
         ]);
 
-        dd($validated);
-        
-        // Criar o usuário aqui
-        // User::create([...])
-        
-        // return redirect()->route('login');
+        $user = User::create($request->only(['name', 'email', 'password']));
+    
+        return response()->json($user, 201);
     }
 }

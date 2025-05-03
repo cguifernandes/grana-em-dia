@@ -29,7 +29,7 @@ const FormLogin = () => {
 				password: "",
 			});
 
-			console.log("Dados válidos!");
+			post(route("login.store"));
 		}
 	};
 

@@ -38,6 +38,6 @@ class RegisterController extends Controller
 
         $user = User::create($request->only(['name', 'email', 'password']));
     
-        return Redirect::route('register')->with('success', 'Parabéns! Sua conta foi criada com sucesso.');
+        return Redirect::back()->with('success', 'Parabéns! Sua conta foi criada com sucesso.');
     }
 }

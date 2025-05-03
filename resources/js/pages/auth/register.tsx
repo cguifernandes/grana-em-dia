@@ -7,9 +7,22 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Head, Link } from "@inertiajs/react";
+import { PageProps } from "@/types/types";
+import { Head, Link, usePage } from "@inertiajs/react";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const Register = () => {
+	const { flash } = usePage<PageProps>().props;
+
+	useEffect(() => {
+		if (flash.success) {
+			toast.success(flash.success);
+		} else if (flash.error) {
+			toast.error(flash.error);
+		}
+	}, [flash]);
+
 	return (
 		<>
 			<Head title="Register" />

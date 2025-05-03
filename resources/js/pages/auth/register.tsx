@@ -7,7 +7,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-
 import { Head, Link } from "@inertiajs/react";
 
 const Register = () => {
@@ -16,7 +15,7 @@ const Register = () => {
 			<Head title="Register" />
 			<main className="min-h-screen flex flex-col gap-y-6 items-center justify-center bg-gradient-to-br from-primary/10 to-white p-4">
 				<div className="flex flex-col items-center gap-y-1">
-					<h1 className="md:text-5xl text-3xl sm:text-4xl text-primary font-bold text-center">
+					<h1 className="md:text-5xl text-4xl text-primary font-bold text-center">
 						Grana Em Dia
 					</h1>
 					<span className="text-foreground text-sm">

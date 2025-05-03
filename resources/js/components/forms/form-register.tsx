@@ -1,13 +1,16 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registerSchema, registerSchemaType } from "@/utils/zod/registerSchema";
-import { useForm } from "@inertiajs/inertia-react";
-import { router } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import { toast } from "sonner";
 import InputPassword from "../input-password";
 import { Button } from "../ui/button";
+import { usePage } from "@inertiajs/react";
+import { PageProps } from "@/types/types";
+import { useEffect } from "react";
 
 const FormRegister = () => {
+	const { flash } = usePage<PageProps>().props;
 	const { data, setData, setError, errors, post, processing } =
 		useForm<registerSchemaType>({
 			name: "",
@@ -15,6 +18,14 @@ const FormRegister = () => {
 			password: "",
 			passwordConfirmation: "",
 		});
+
+	useEffect(() => {
+		if (flash.success) {
+			toast.success(flash.success);
+		} else if (flash.error) {
+			toast.error(flash.error);
+		}
+	}, [flash]);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -37,18 +48,7 @@ const FormRegister = () => {
 				passwordConfirmation: "",
 			});
 
-			post(route("register.store"), {
-				onSuccess: () => {
-					toast.success("Conta criada com sucesso!");
-
-					router.push({
-						url: "/login",
-					});
-				},
-				onError: () => {
-					toast.error("Erro ao criar conta.");
-				},
-			});
+			post(route("register.store"));
 		}
 	};
 

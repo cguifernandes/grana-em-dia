@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@inertiajs/inertia':
+        specifier: ^0.11.1
+        version: 0.11.1
       '@inertiajs/inertia-react':
         specifier: ^0.8.1
         version: 0.8.1(@inertiajs/inertia@0.11.1)(react@19.1.0)

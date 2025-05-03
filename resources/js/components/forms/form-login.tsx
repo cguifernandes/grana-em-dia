@@ -1,5 +1,5 @@
 import { loginSchema, loginSchemaType } from "@/utils/zod/loginSchema";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import InputPassword from "../input-password";

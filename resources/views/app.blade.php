@@ -7,6 +7,12 @@
     @inertiaHead
     @viteReactRefresh
     @vite(['resources/css/app.css', 'resources/js/app.tsx'])
+    <script>
+        (function () {
+            const theme = localStorage.getItem("theme") || "light";
+            document.documentElement.classList.add(theme);
+        })();
+    </script>
 </head>
 <body>
 @inertia

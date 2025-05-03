@@ -18,9 +18,9 @@ const InputPassword = ({
 				onClick={() => setShowPassword(!showPassword)}
 			>
 				{showPassword ? (
-					<EyeOff className="text-foreground" size={18} />
+					<EyeOff className="text-foreground" strokeWidth={1.5} size={18} />
 				) : (
-					<Eye className="text-foreground" size={18} />
+					<Eye className="text-foreground" strokeWidth={1.5} size={18} />
 				)}
 			</button>
 		</div>

@@ -4,7 +4,7 @@ export type PageProps = {
 		error?: string;
 	};
 	auth?: {
-		user?: {};
+		user?: UserType;
 	};
 };
 

@@ -16,7 +16,7 @@ import { PageProps } from "@/types/types";
 const Profile = () => {
 	const { auth } = usePage<PageProps>().props;
 
-	if (!auth) return;
+	if (!auth || !auth.user) return;
 
 	return (
 		<DropdownMenu>
@@ -26,15 +26,25 @@ const Profile = () => {
 				</Avatar>
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent className="w-56">
+			<DropdownMenuContent align="end" className="w-64 right-0">
 				<DropdownMenuLabel className="truncate">
-					{auth.user?.email}
+					<div className="flex gap-x-2 items-center">
+						<Avatar className="h-10 w-10">
+							<AvatarFallback>{getInitials("Guilherme")}</AvatarFallback>
+						</Avatar>
+						<div className="flex flex-col flex-1 overflow-hidden">
+							<h2 className="truncate">{auth.user.name}</h2>
+							<span className="text-xs text-neutral-500 dark:text-neutral-400 truncate">
+								{auth.user.email}
+							</span>
+						</div>
+					</div>
 				</DropdownMenuLabel>
 
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup className="p-1">
 					<DropdownMenuItem>
-						<User />
+						<User className="dark:text-white text-black" />
 						<span>Perfil</span>
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
@@ -43,7 +53,7 @@ const Profile = () => {
 
 				<DropdownMenuGroup className="p-1">
 					<DropdownMenuItem onClick={() => router.post("/logout")}>
-						<span>Sair</span>
+						<span className="text-center w-full">Sair</span>
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 			</DropdownMenuContent>

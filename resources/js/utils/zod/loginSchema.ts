@@ -9,6 +9,7 @@ export const loginSchema = z.object({
 		.string()
 		.min(1, "Este campo é obrigatório")
 		.max(8, "A senha deve ter no máximo 8 caracteres"),
+	rememberMe: z.boolean().default(false),
 });
 
 export type loginSchemaType = z.infer<typeof loginSchema>;

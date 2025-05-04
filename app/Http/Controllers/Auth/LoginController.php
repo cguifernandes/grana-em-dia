@@ -28,8 +28,11 @@ class LoginController extends Controller
             'password.required' => 'Este campo é obrigatório.',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate(); 
+        $rememberMe = $request->boolean('rememberMe');
+
+        if (Auth::attempt($credentials, $rememberMe)) {
+            $request->session()->regenerate();
+
             return redirect()->intended('/')->with('success', 'Login realizado com sucesso!');
         }
 

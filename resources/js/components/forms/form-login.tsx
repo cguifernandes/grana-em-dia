@@ -4,12 +4,14 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import InputPassword from "../input-password";
 import { Label } from "../ui/label";
+import { Checkbox } from "../ui/checkbox";
 
 const FormLogin = () => {
 	const { data, setData, setError, errors, post, processing } =
 		useForm<loginSchemaType>({
 			email: "",
 			password: "",
+			rememberMe: false,
 		});
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,11 +24,13 @@ const FormLogin = () => {
 			setError({
 				email: zodErrors.email?._errors[0] ?? "",
 				password: zodErrors.password?._errors[0] ?? "",
+				rememberMe: zodErrors.rememberMe?._errors[0] ?? "",
 			});
 		} else {
 			setError({
 				email: "",
 				password: "",
+				rememberMe: "",
 			});
 
 			post(route("login.store"));
@@ -63,8 +67,18 @@ const FormLogin = () => {
 						<p className="text-xs text-destructive">{errors.password}</p>
 					)}
 				</div>
+				<div className="flex items-center gap-x-2">
+					<Checkbox
+						id="remember"
+						checked={data.rememberMe}
+						onCheckedChange={(checked) =>
+							setData("rememberMe", Boolean(checked))
+						}
+					/>
+					<Label htmlFor="remember">Lembrar-me por 7 dias</Label>
+				</div>
 				<Button isLoading={processing} type="submit" className="w-full">
-					Criar conta
+					Login
 				</Button>
 			</div>
 		</form>

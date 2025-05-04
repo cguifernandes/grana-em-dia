@@ -57,7 +57,7 @@
 	--foreground: oklch(25% 0.02 142);
 
 	/* Card colors */
-	--card: oklch(99% 0.015 142);
+	--card: oklch(0.97 0.0078 139.44);
 	--card-foreground: oklch(25% 0.02 142);
 
 	/* Popover colors */
@@ -88,12 +88,11 @@
 	--input: oklch(85% 0.03 142);
 	--ring: oklch(62% 0.12 142);
 
-	/* Chart colors - variations of the green theme */
-	--chart-1: oklch(62% 0.158 142); /* Same as primary */
-	--chart-2: oklch(72% 0.13 142);
-	--chart-3: oklch(52% 0.17 142);
-	--chart-4: oklch(82% 0.09 142);
-	--chart-5: oklch(42% 0.18 142);
+	--chart-1: oklch(78% 0.12 142);
+	--chart-2: oklch(68% 0.14 142);
+	--chart-3: oklch(58% 0.16 142);
+	--chart-4: oklch(48% 0.18 142);
+	--chart-5: oklch(38% 0.2 142);
 
 	/* Sidebar colors */
 	--sidebar-background: oklch(95% 0.02 142);
@@ -104,6 +103,7 @@
 	--sidebar-accent-foreground: oklch(20% 0.025 142);
 	--sidebar-border: oklch(85% 0.03 142);
 	--sidebar-ring: oklch(62% 0.12 142);
+	--sidebar: hsl(0 0% 98%);
 }
 
 .dark {
@@ -112,7 +112,7 @@
 	--foreground: oklch(95% 0.015 142);
 
 	/* Card colors */
-	--card: oklch(15% 0.02 142);
+	--card: oklch(0.22 0.0097 145.24);
 	--card-foreground: oklch(95% 0.015 142);
 
 	/* Popover colors */
@@ -143,14 +143,12 @@
 	--input: oklch(30% 0.04 142);
 	--ring: oklch(55% 0.12 142);
 
-	/* Chart colors - variations of the green theme */
-	--chart-1: oklch(62% 0.158 142); /* Same as primary */
-	--chart-2: oklch(72% 0.13 142);
-	--chart-3: oklch(52% 0.17 142);
-	--chart-4: oklch(42% 0.18 142);
-	--chart-5: oklch(82% 0.09 142);
+	--chart-1: oklch(78% 0.12 142);
+	--chart-2: oklch(68% 0.14 142);
+	--chart-3: oklch(58% 0.16 142);
+	--chart-4: oklch(48% 0.18 142);
+	--chart-5: oklch(38% 0.2 142);
 
-	/* Sidebar colors */
 	--sidebar-background: oklch(20% 0.025 142);
 	--sidebar-foreground: oklch(95% 0.015 142);
 	--sidebar-primary: oklch(62% 0.158 142); /* Same as primary */
@@ -159,6 +157,7 @@
 	--sidebar-accent-foreground: oklch(95% 0.015 142);
 	--sidebar-border: oklch(30% 0.04 142);
 	--sidebar-ring: oklch(55% 0.12 142);
+	--sidebar: hsl(240 5.9% 10%);
 }
 
 @layer base {

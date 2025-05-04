@@ -6,7 +6,7 @@ const ThemeToggle = () => {
 
 	return (
 		<button
-			className="hover:bg-accent/70 transition-colors size-8 cursor-pointer rounded-md flex justify-center items-center"
+			className="hover:bg-muted transition-colors size-8 cursor-pointer rounded-md flex justify-center items-center"
 			type="button"
 			onClick={toggleTheme}
 		>

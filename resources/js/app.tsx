@@ -3,6 +3,7 @@ import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { Toaster } from "./components/ui/sonner";
 import { ThemeProvider } from "./context/ThemeContext";
+import { SidebarProvider } from "./components/ui/sidebar";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -20,9 +21,11 @@ createInertiaApp({
 		root.render(
 			<>
 				<Toaster />
-				<ThemeProvider>
-					<App {...props} />
-				</ThemeProvider>
+				<SidebarProvider>
+					<ThemeProvider>
+						<App {...props} />
+					</ThemeProvider>
+				</SidebarProvider>
 			</>,
 		);
 	},

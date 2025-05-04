@@ -65,7 +65,7 @@
 	--popover-foreground: oklch(25% 0.02 142);
 
 	/* Primary colors */
-	--primary: oklch(62% 0.158 142); /* #28AF60 */
+	--primary: oklch(62% 0.158 142);
 	--primary-foreground: oklch(98% 0.015 142);
 
 	/* Secondary colors */

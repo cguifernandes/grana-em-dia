@@ -1,10 +1,4 @@
-import {
-	ArrowDownRight,
-	DollarSign,
-	Percent,
-	TrendingDown,
-	TrendingUp,
-} from "lucide-react";
+import { ArrowDownRight, DollarSign, TrendingUp } from "lucide-react";
 import BalanceCard from "../balance-card";
 import MonthlyTrendChart, { MonthlyTrend } from "../charts/monthly-trend-chart";
 import ExpensesByCategoryChart, {

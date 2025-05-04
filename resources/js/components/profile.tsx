@@ -19,7 +19,7 @@ const Profile = () => {
 	if (!auth || !auth.user) return;
 
 	return (
-		<DropdownMenu>
+		<DropdownMenu modal={false}>
 			<DropdownMenuTrigger asChild>
 				<Avatar className="h-9 w-9 cursor-pointer">
 					<AvatarFallback>{getInitials("Guilherme")}</AvatarFallback>

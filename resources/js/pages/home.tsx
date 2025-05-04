@@ -9,13 +9,13 @@ const Home = () => {
 		<>
 			<Head title="Home" />
 			<SidebarInset>
-				<main className="min-h-screen flex bg-neutral-50 dark:bg-neutral-900">
+				<div className="min-h-screen flex bg-neutral-50 dark:bg-neutral-900">
 					<SideBar />
 					<div className="flex flex-col items-center flex-1">
 						<Header />
 						<Dashboard />
 					</div>
-				</main>
+				</div>
 			</SidebarInset>
 		</>
 	);

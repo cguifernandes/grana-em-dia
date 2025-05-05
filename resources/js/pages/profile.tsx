@@ -1,6 +1,5 @@
 import FormProfile from "@/components/forms/form-profile";
 import DashboardLayout from "@/components/layout/dashboard-layout";
-import ProfileInformation from "@/components/profile-information";
 import {
 	Card,
 	CardContent,
@@ -31,9 +30,7 @@ const Profile = () => {
 			<Head title="Perfil" />
 			<DashboardLayout title="Perfil">
 				<div className="h-full flex flex-col gap-y-4">
-					<h1 className="text-xl">Perfil</h1>
-
-					<Card className="gap-6 p-4">
+					<Card className="gap-4 p-4">
 						<CardHeader className="px-0">
 							<CardTitle>Informações</CardTitle>
 							<CardDescription>
@@ -42,8 +39,6 @@ const Profile = () => {
 						</CardHeader>
 
 						<CardContent className="px-0 flex flex-col gap-y-4">
-							<ProfileInformation user={auth.user} />
-
 							<FormProfile defaultValues={auth.user} />
 						</CardContent>
 					</Card>

@@ -41,7 +41,7 @@ const TransactionList = ({ transactions, className }: TransactionListProps) => {
 	};
 
 	return (
-		<Card className={cn("gap-2 p-4", className)}>
+		<Card className={cn("gap-4 p-4", className)}>
 			<CardHeader className="px-0">
 				<CardTitle>Últimas transações</CardTitle>
 				<CardDescription>Acompanhe seus gastos e receitas</CardDescription>
@@ -61,18 +61,27 @@ const TransactionList = ({ transactions, className }: TransactionListProps) => {
 						>
 							<div className="flex items-center gap-x-4">
 								<div
-									className={`p-2.5 rounded-md ${transaction.type === "income" ? "bg-primary/20 text-primary" : "bg-destructive/20 text-destructive"}`}
+									className={cn(
+										"p-2.5 rounded-md",
+										transaction.type === "income"
+											? "bg-primary/20 text-primary"
+											: "bg-destructive/20 text-destructive",
+									)}
 								>
 									{transaction.icon}
 								</div>
-								<div>
-									<h3>{transaction.category}</h3>
+								<div className="flex flex-col gap-y-1">
+									<h3 className="leading-none font-medium">
+										{transaction.category}
+									</h3>
 									<div className="flex items-center text-sm gap-x-2">
-										<span className="text-muted-foreground">
+										<span className="text-muted-foreground leading-none">
 											{transaction.category}
 										</span>
-										<span className="text-muted-foreground">•</span>
-										<span className="text-muted-foreground">
+										<span className="text-muted-foreground leading-none">
+											•
+										</span>
+										<span className="text-muted-foreground leading-none">
 											{transaction.date}
 										</span>
 									</div>
@@ -81,6 +90,7 @@ const TransactionList = ({ transactions, className }: TransactionListProps) => {
 							<div className="flex gap-x-2 items-center">
 								<span
 									className={cn(
+										"leading-none font-medium",
 										transaction.type === "income"
 											? "text-primary"
 											: "text-destructive",
@@ -106,10 +116,12 @@ const TransactionList = ({ transactions, className }: TransactionListProps) => {
 					))}
 				</motion.div>
 
-				<div className="mt-6 pt-4 border-t border-border">
+				<div className="pt-4 border-t border-border">
 					<div className="flex justify-between items-center px-3">
 						<span>Saldo</span>
-						<span className="text-xl font-medium">R$ 12.000,50</span>
+						<span className="text-xl leading-none font-medium">
+							R$ 12.000,50
+						</span>
 					</div>
 				</div>
 			</CardContent>

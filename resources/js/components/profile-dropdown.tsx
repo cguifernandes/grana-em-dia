@@ -36,8 +36,10 @@ const Profile = () => {
 								{getInitials(auth.user.name)}
 							</AvatarFallback>
 						</Avatar>
-						<div className="flex flex-col flex-1 overflow-hidden">
-							<h2 className="truncate">{auth.user.name}</h2>
+						<div className="flex flex-col flex-1 gap-y-1 overflow-hidden">
+							<h2 className="truncate leading-none font-medium">
+								{auth.user.name}
+							</h2>
 							<span className="text-xs text-muted-foreground truncate">
 								{auth.user.email}
 							</span>

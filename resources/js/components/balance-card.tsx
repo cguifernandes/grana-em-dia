@@ -32,9 +32,9 @@ const BalanceCard = ({
 			</CardHeader>
 			<CardContent className="px-0">
 				<div className="flex justify-between items-center">
-					<div className={cn("text-2xl font-semibold text-muted-foreground")}>
+					<h2 className={cn("text-2xl font-semibold text-muted-foreground")}>
 						{formattedAmount}
-					</div>
+					</h2>
 					<div className={cn("p-1.5 rounded-md", iconClassName)}>{icon}</div>
 				</div>
 			</CardContent>

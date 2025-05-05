@@ -73,6 +73,7 @@ const FormProfile = ({ defaultValues }: FormProfileProps) => {
 						<p className="text-xs text-destructive">{errors.name}</p>
 					)}
 				</div>
+
 				<div className="flex flex-col gap-y-2">
 					<Label htmlFor="email">E-mail</Label>
 					<Input
@@ -86,7 +87,9 @@ const FormProfile = ({ defaultValues }: FormProfileProps) => {
 						<p className="text-xs text-destructive">{errors.email}</p>
 					)}
 				</div>
+
 				<Separator />
+
 				<div className="flex flex-col gap-y-2">
 					<Label htmlFor="currentPassword">Senha atual</Label>
 					<InputPassword
@@ -102,36 +105,38 @@ const FormProfile = ({ defaultValues }: FormProfileProps) => {
 					)}
 				</div>
 
-				<div className="flex flex-col gap-y-2">
-					<Label htmlFor="newPassword">Nova senha</Label>
-					<InputPassword
-						value={data.newPassword}
-						onChange={(e) => setData("newPassword", e.target.value)}
-						id="newPassword"
-						placeholder="Nova senha"
-						aria-invalid={!!errors.newPassword}
-						maxLength={8}
-					/>
-					{errors.newPassword && (
-						<p className="text-xs text-destructive">{errors.newPassword}</p>
-					)}
-				</div>
+				<div className="flex gap-x-4">
+					<div className="flex flex-1 flex-col gap-y-2">
+						<Label htmlFor="newPassword">Nova senha</Label>
+						<InputPassword
+							value={data.newPassword}
+							onChange={(e) => setData("newPassword", e.target.value)}
+							id="newPassword"
+							placeholder="Nova senha"
+							aria-invalid={!!errors.newPassword}
+							maxLength={8}
+						/>
+						{errors.newPassword && (
+							<p className="text-xs text-destructive">{errors.newPassword}</p>
+						)}
+					</div>
 
-				<div className="flex flex-col gap-y-2">
-					<Label htmlFor="passwordConfirmation">Confirmar nova senha</Label>
-					<InputPassword
-						value={data.passwordConfirmation}
-						onChange={(e) => setData("passwordConfirmation", e.target.value)}
-						id="passwordConfirmation"
-						placeholder="Confirme a nova senha"
-						aria-invalid={!!errors.passwordConfirmation}
-						maxLength={8}
-					/>
-					{errors.passwordConfirmation && (
-						<p className="text-xs text-destructive">
-							{errors.passwordConfirmation}
-						</p>
-					)}
+					<div className="flex flex-1 flex-col gap-y-2">
+						<Label htmlFor="passwordConfirmation">Confirmar nova senha</Label>
+						<InputPassword
+							value={data.passwordConfirmation}
+							onChange={(e) => setData("passwordConfirmation", e.target.value)}
+							id="passwordConfirmation"
+							placeholder="Confirme a nova senha"
+							aria-invalid={!!errors.passwordConfirmation}
+							maxLength={8}
+						/>
+						{errors.passwordConfirmation && (
+							<p className="text-xs text-destructive">
+								{errors.passwordConfirmation}
+							</p>
+						)}
+					</div>
 				</div>
 
 				<Button isLoading={processing} type="submit" className="w-32">

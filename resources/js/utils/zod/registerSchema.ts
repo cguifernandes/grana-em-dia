@@ -16,6 +16,10 @@ export const registerSchema = z
 	.refine((data) => data.password === data.passwordConfirmation, {
 		message: "As senhas não coincidem",
 		path: ["passwordConfirmation"],
+	})
+	.refine((data) => data.password === data.passwordConfirmation, {
+		message: "As senhas não coincidem",
+		path: ["password"],
 	});
 
 export type registerSchemaType = z.infer<typeof registerSchema>;

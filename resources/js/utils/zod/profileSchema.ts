@@ -25,6 +25,10 @@ export const profileSchema = z
 	})
 	.refine((data) => data.newPassword === data.passwordConfirmation, {
 		message: "As senhas não coincidem",
+		path: ["newPassword"],
+	})
+	.refine((data) => data.newPassword === data.passwordConfirmation, {
+		message: "As senhas não coincidem",
 		path: ["passwordConfirmation"],
 	});
 

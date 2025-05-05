@@ -92,8 +92,6 @@ const Home = () => {
 			<Head title="Home" />
 			<DashboardLayout title="Dashboard">
 				<div className="h-full flex flex-col gap-y-4">
-					<h1 className="text-xl">Visão Geral</h1>
-
 					<div className="flex gap-x-2">
 						<BalanceCard
 							icon={<DollarSign className="text-yellow-500" size={16} />}

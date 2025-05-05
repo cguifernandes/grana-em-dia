@@ -81,7 +81,6 @@ const TransactionList = ({ transactions, className }: TransactionListProps) => {
 							<div className="flex gap-x-2 items-center">
 								<span
 									className={cn(
-										"font-medium",
 										transaction.type === "income"
 											? "text-primary"
 											: "text-destructive",
@@ -110,7 +109,7 @@ const TransactionList = ({ transactions, className }: TransactionListProps) => {
 				<div className="mt-6 pt-4 border-t border-border">
 					<div className="flex justify-between items-center px-3">
 						<span>Saldo</span>
-						<span className="text-xl font-bold">R$ 12.000,50</span>
+						<span className="text-xl font-medium">R$ 12.000,50</span>
 					</div>
 				</div>
 			</CardContent>

@@ -3,9 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\LoginController;
 
-Route::get('/', [HomeController::class, 'index']);
+
+Route::middleware(['auth'])->group(function () {
+  Route::get('/', [HomeController::class, 'index'])->name("home");
+
+	Route::get('/profile', [ProfileController::class, 'index'])->name("profile");
+	Route::put('/profile', [ProfileController::class, 'update'])->name("profile.update");
+});
 
 Route::middleware('guest')->group(function () {
   Route::get('/register', [RegisterController::class, 'index'])->name("register");

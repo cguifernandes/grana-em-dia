@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { User } from "lucide-react";
 import { getInitials } from "@/utils/functions";
-import { router, usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { PageProps } from "@/types/types";
 
 const Profile = () => {
@@ -22,19 +22,23 @@ const Profile = () => {
 		<DropdownMenu modal={false}>
 			<DropdownMenuTrigger asChild>
 				<Avatar className="h-9 w-9 cursor-pointer">
-					<AvatarFallback>{getInitials("Guilherme")}</AvatarFallback>
+					<AvatarFallback className="border border-primary">
+						{getInitials(auth.user.name)}
+					</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent align="end" className="w-64 right-0">
 				<DropdownMenuLabel className="truncate">
 					<div className="flex gap-x-2 items-center">
-						<Avatar className="h-10 w-10">
-							<AvatarFallback>{getInitials("Guilherme")}</AvatarFallback>
+						<Avatar className="h-9 w-9">
+							<AvatarFallback className="border border-primary">
+								{getInitials(auth.user.name)}
+							</AvatarFallback>
 						</Avatar>
 						<div className="flex flex-col flex-1 overflow-hidden">
 							<h2 className="truncate">{auth.user.name}</h2>
-							<span className="text-xs text-neutral-500 dark:text-neutral-400 truncate">
+							<span className="text-xs text-muted-foreground truncate">
 								{auth.user.email}
 							</span>
 						</div>
@@ -43,9 +47,11 @@ const Profile = () => {
 
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup className="p-1">
-					<DropdownMenuItem>
-						<User className="dark:text-white text-black" />
-						<span>Perfil</span>
+					<DropdownMenuItem asChild>
+						<Link href="/profile" className="flex items-center gap-2">
+							<User className="text-black dark:text-white" />
+							Perfil
+						</Link>
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 

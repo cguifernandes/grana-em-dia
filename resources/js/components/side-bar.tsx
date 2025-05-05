@@ -1,5 +1,29 @@
+import { ChartPie, User } from "lucide-react";
 import Logo from "../../assets/logo.svg";
-import { Sidebar, SidebarHeader } from "./ui/sidebar";
+import {
+	Sidebar,
+	SidebarContent,
+	SidebarGroup,
+	SidebarGroupContent,
+	SidebarHeader,
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
+} from "./ui/sidebar";
+import { Link } from "@inertiajs/react";
+
+const items = [
+	{
+		title: "Dashboard",
+		url: "/",
+		icon: <ChartPie className="h-5 w-5" />,
+	},
+	{
+		title: "Perfil",
+		url: "/profile",
+		icon: <User className="h-5 w-5" />,
+	},
+];
 
 const SideBar = () => {
 	return (
@@ -18,6 +42,30 @@ const SideBar = () => {
 					</div>
 				</div>
 			</SidebarHeader>
+
+			<SidebarContent>
+				<SidebarGroup>
+					<SidebarGroupContent>
+						<SidebarMenu>
+							{items.map((item) => (
+								<SidebarMenuItem key={item.title}>
+									<SidebarMenuButton asChild>
+										<Link
+											href={{
+												method: "get",
+												url: item.url,
+											}}
+										>
+											{item.icon}
+											<span>{item.title}</span>
+										</Link>
+									</SidebarMenuButton>
+								</SidebarMenuItem>
+							))}
+						</SidebarMenu>
+					</SidebarGroupContent>
+				</SidebarGroup>
+			</SidebarContent>
 		</Sidebar>
 	);
 };

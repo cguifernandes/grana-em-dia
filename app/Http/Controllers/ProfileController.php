@@ -17,6 +17,10 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
+        if ($request->has('id') && $request->id != $user->id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email,' . $user->id,

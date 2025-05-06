@@ -104,11 +104,11 @@ const TransactionList = ({ transactions, className }: TransactionListProps) => {
 
 								{transaction.type === "income" ? (
 									<div className="p-1.5 rounded-md bg-primary/20">
-										<ArrowDownRight className="text-primary" size={16} />
+										<ArrowUpRight className="text-primary" size={16} />
 									</div>
 								) : (
 									<div className="p-1.5 rounded-md bg-destructive/20">
-										<ArrowUpRight className="text-destructive" size={16} />
+										<ArrowDownRight className="text-destructive" size={16} />
 									</div>
 								)}
 							</div>

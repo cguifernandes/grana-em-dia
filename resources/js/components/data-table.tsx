@@ -11,6 +11,15 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import ActionsCell from "@/components/actions-cell";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+	PaginationLink,
+	PaginationPrevious,
+	PaginationNext,
+	PaginationEllipsis,
+} from "./ui/pagination";
 
 type Column<T> = {
 	header: string;
@@ -42,6 +51,8 @@ const DataTable = <T extends { id: number | string }>({
 	emptyMessage = "Nenhum item encontrado",
 }: DataTableProps<T>) => {
 	const [searchTerm, setSearchTerm] = useState("");
+	const [currentPage, setCurrentPage] = useState(1);
+	const itemsPerPage = 12;
 
 	const filteredData = data?.filter((item) => {
 		if (!searchField) return true;
@@ -50,6 +61,25 @@ const DataTable = <T extends { id: number | string }>({
 
 		return String(value).toLowerCase().includes(searchTerm.toLowerCase());
 	});
+
+	const paginatedData = filteredData?.slice(
+		(currentPage - 1) * itemsPerPage,
+		currentPage * itemsPerPage,
+	);
+
+	const totalPages = Math.ceil((filteredData?.length || 0) / itemsPerPage);
+
+	const handlePreviousPage = () => {
+		if (currentPage > 1) {
+			setCurrentPage(currentPage - 1);
+		}
+	};
+
+	const handleNextPage = () => {
+		if (currentPage < totalPages) {
+			setCurrentPage(currentPage + 1);
+		}
+	};
 
 	return (
 		<>
@@ -82,7 +112,7 @@ const DataTable = <T extends { id: number | string }>({
 					</TableHeader>
 
 					<TableBody>
-						{!filteredData || filteredData.length === 0 ? (
+						{!paginatedData || paginatedData.length === 0 ? (
 							<TableRow>
 								<TableCell
 									colSpan={columns.length + (onEdit || onDelete ? 1 : 0)}
@@ -92,7 +122,7 @@ const DataTable = <T extends { id: number | string }>({
 								</TableCell>
 							</TableRow>
 						) : (
-							filteredData.map((item) => (
+							paginatedData.map((item) => (
 								<TableRow key={item.id}>
 									{columns.map((column) => (
 										<TableCell key={String(column.accessorKey)}>
@@ -144,6 +174,37 @@ const DataTable = <T extends { id: number | string }>({
 						)}
 					</TableBody>
 				</Table>
+			</div>
+
+			<div className="flex justify-between items-center w-full">
+				<span className="text-sm text-muted-foreground whitespace-nowrap">
+					Mostrando {paginatedData?.length} de {filteredData?.length} registros
+				</span>
+
+				<Pagination>
+					<PaginationContent>
+						<PaginationPrevious
+							onClick={() => {
+								if (currentPage > 1) handlePreviousPage();
+							}}
+						/>
+						{Array.from({ length: totalPages }, (_, index) => (
+							<PaginationItem key={index}>
+								<PaginationLink
+									onClick={() => setCurrentPage(index + 1)}
+									isActive={currentPage === index + 1}
+								>
+									{index + 1}
+								</PaginationLink>
+							</PaginationItem>
+						))}
+						<PaginationNext
+							onClick={() => {
+								if (currentPage < totalPages) handleNextPage();
+							}}
+						/>
+					</PaginationContent>
+				</Pagination>
 			</div>
 		</>
 	);

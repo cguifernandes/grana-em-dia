@@ -9,6 +9,7 @@ export type PageProps = {
 		user?: UserType;
 	};
 	categories?: CategoryType[];
+	transactions?: TransactionType[];
 };
 
 export type UserType = {
@@ -27,6 +28,19 @@ export type CategoryType = {
 	color: CategoryColors;
 	created_at: string;
 	updated_at: string;
+};
+
+export type TransactionType = {
+	id: number;
+	description: string;
+	amount: number;
+	date: string;
+	category_id: number;
+	user_id: number;
+	type: "expense" | "income";
+	created_at: string;
+	updated_at: string;
+	category: CategoryType;
 };
 
 export type CategoryIconsType = {

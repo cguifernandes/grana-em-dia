@@ -85,8 +85,12 @@ export const iconMap = {
 	Trophy,
 } as const;
 
-export const renderIcon = (iconName: string, size = 18) => {
+export const renderIcon = (
+	iconName: string,
+	size = 18,
+	color = "currentColor",
+) => {
 	const IconComponent =
 		iconMap[iconName as keyof typeof iconMap] || ShoppingCart;
-	return <IconComponent size={size} />;
+	return <IconComponent size={size} color={color} />;
 };

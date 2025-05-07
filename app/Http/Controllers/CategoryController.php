@@ -41,6 +41,10 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
+        if ($category->user_id !== auth()->id()) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:20'],
         ], [
@@ -56,6 +60,10 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        if ($category->user_id !== auth()->id()) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $category->delete();
 
         return Redirect::back()->with('success', 'Categoria deletada com sucesso.');

@@ -1,4 +1,4 @@
-import { ChartPie, Folder } from "lucide-react";
+import { ChartPie, CreditCard, Folder } from "lucide-react";
 import Logo from "../../assets/logo.svg";
 import {
 	Sidebar,
@@ -22,6 +22,11 @@ const items = [
 		title: "Categorias",
 		url: "/categories",
 		icon: <Folder size={18} />,
+	},
+	{
+		title: "Transações",
+		url: "/transactions",
+		icon: <CreditCard size={18} />,
 	},
 ];
 

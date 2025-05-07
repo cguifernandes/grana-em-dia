@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Transaction extends Model
 {
     protected $fillable = [
-        'name',
-        'icon',
-        'color',
+        'description',
+        'amount',
+        'date',
+        'category_id',
+        'type',
         'user_id',
     ];
 
@@ -18,8 +20,8 @@ class Category extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function transactions()
+    public function category()
     {
-        return $this->hasMany(Transactions::class);
+        return $this->belongsTo(Category::class);
     }
 }

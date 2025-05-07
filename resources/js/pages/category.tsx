@@ -1,5 +1,4 @@
 import FormCategory from "@/components/forms/form-category";
-import CategoriesList from "@/components/layout/categories-list";
 import DashboardLayout from "@/components/layout/dashboard-layout";
 import {
 	Dialog,
@@ -13,8 +12,10 @@ import { Head, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import DeleteDialog from "@/components/delete-dialog";
+import DataTable from "@/components/data-table";
+import { renderIcon } from "@/utils/functions";
 
-const Profile = () => {
+const Category = () => {
 	const { flash, categories } = usePage<PageProps>().props;
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [isLoadingDelete, setIsLoadingDelete] = useState(false);
@@ -65,16 +66,60 @@ const Profile = () => {
 		}
 	};
 
+	const columns = [
+		{
+			header: "Nome",
+			accessorKey: "name" as const,
+			cell: (category: CategoryType) => (
+				<div className="flex items-center gap-x-2">
+					<div
+						style={{
+							backgroundColor: `${category.color}33`,
+							color: category.color,
+						}}
+						className="p-1.5 w-fit rounded-md flex items-center justify-center"
+					>
+						{renderIcon(category.icon, 16)}
+					</div>
+					<span className="text-sm font-medium">{category.name}</span>
+				</div>
+			),
+		},
+		{
+			header: "Criado em",
+			accessorKey: "created_at" as const,
+			cell: (category: CategoryType) => (
+				<span className="text-muted-foreground">
+					{new Date(category.created_at).toLocaleDateString()}
+				</span>
+			),
+		},
+		{
+			header: "Atualizado em",
+			accessorKey: "updated_at" as const,
+			cell: (category: CategoryType) => (
+				<span className="text-muted-foreground">
+					{new Date(category.updated_at).toLocaleDateString()}
+				</span>
+			),
+		},
+	];
+
 	return (
 		<>
 			<Head title="Categorias" />
 			<DashboardLayout title="Categorias">
 				<div className="h-full flex flex-col gap-y-4">
-					<CategoriesList
-						categories={categories}
+					<DataTable
+						data={categories}
+						columns={columns}
+						searchField="name"
+						searchPlaceholder="Buscar categorias..."
+						addButtonText="Criar uma nova categoria"
 						onClickButtonAdd={() => setDialogOpen(true)}
 						onEdit={handleEditCategory}
 						onDelete={handleDeleteCategory}
+						emptyMessage="Nenhuma categoria encontrada"
 					/>
 
 					<Dialog open={dialogOpen} onOpenChange={handleCloseDialog}>
@@ -111,4 +156,4 @@ const Profile = () => {
 	);
 };
 
-export default Profile;
+export default Category;

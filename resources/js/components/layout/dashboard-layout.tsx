@@ -1,5 +1,5 @@
 import { SidebarInset } from "../ui/sidebar";
-import SideBar from "../side-bar";
+import SideBar from "./side-bar";
 import Header from "../header";
 
 type DashboardLayoutProps = {

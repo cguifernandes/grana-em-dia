@@ -1,4 +1,7 @@
-import { cn } from "@/lib/utils";
+import { Bar } from "recharts";
+import { ChartTooltipContent } from "../ui/chart";
+import { ChartTooltip } from "../ui/chart";
+import { BarChart, CartesianGrid, XAxis } from "recharts";
 import {
 	Card,
 	CardContent,
@@ -6,72 +9,74 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
-import {
-	ChartConfig,
-	ChartContainer,
-	ChartTooltip,
-	ChartTooltipContent,
-} from "../ui/chart";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { ChartConfig } from "../ui/chart";
+import { ChartContainer } from "../ui/chart";
+import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils/functions";
 
-export type MonthlyTrend = {
-	month: string;
-	income: number;
-	expense: number;
+export type ComparisonLastMonth = {
+	category: string;
+	lastMonth: {
+		income: number;
+		expense: number;
+	};
+	currentMonth: {
+		income: number;
+		expense: number;
+	};
 };
 
-type MonthlyTrendChartProps = {
-	data: MonthlyTrend[];
+type ComparisonLastMonthProps = {
+	data: ComparisonLastMonth[];
 	className?: string;
 	chartClassName?: string;
 };
 
 const chartConfig = {
-	income: {
-		label: "Renda",
+	"lastMonth.income": {
+		label: "Receitas de março",
 		color: "var(--chart-1)",
 	},
-	expense: {
-		label: "Despesas",
+	"lastMonth.expense": {
+		label: "Despesas de março",
 		color: "var(--chart-2)",
+	},
+	"currentMonth.income": {
+		label: "Receitas de abril",
+		color: "var(--chart-3)",
+	},
+	"currentMonth.expense": {
+		label: "Despesas de abril",
+		color: "var(--chart-4)",
 	},
 } satisfies ChartConfig;
 
-const MonthlyTrendChart = ({
+const ComparisonLastMonthChart = ({
 	data,
 	className,
 	chartClassName,
-}: MonthlyTrendChartProps) => {
+}: ComparisonLastMonthProps) => {
 	return (
 		<Card className={cn("gap-6 p-4", className)}>
 			<CardHeader className="px-0">
-				<CardTitle>Tendências mensais</CardTitle>
+				<CardTitle>Comparativo com mês anterior</CardTitle>
 				<CardDescription>
-					Veja como suas receitas e despesas variam a cada mês.
+					Compare suas receitas e despesas deste mês com o mês anterior
 				</CardDescription>
 			</CardHeader>
 
 			<CardContent className="px-0">
 				<ChartContainer
-					className={cn("!m-auto max-h-[300px]", chartClassName)}
+					className={cn("max-h-[300px]", chartClassName)}
 					config={chartConfig}
 				>
-					<AreaChart
-						accessibilityLayer
-						data={data}
-						margin={{
-							left: 12,
-							right: 12,
-						}}
-					>
+					<BarChart accessibilityLayer data={data}>
 						<CartesianGrid vertical={false} />
 						<XAxis
-							dataKey="month"
+							dataKey="category"
 							tickLine={false}
+							tickMargin={10}
 							axisLine={false}
-							tickMargin={4}
-							tickFormatter={(value) => value.slice(0, 3)}
 						/>
 						<ChartTooltip
 							cursor={false}
@@ -102,32 +107,36 @@ const MonthlyTrendChart = ({
 											</div>
 										);
 									}}
-									className="w-48"
+									className="w-60"
 									indicator="dot"
 								/>
 							}
 						/>
-						<Area
-							dataKey="income"
-							type="natural"
-							fill="var(--color-income)"
-							fillOpacity={0.4}
-							stroke="var(--color-income)"
-							stackId="a"
+						<Bar
+							dataKey="lastMonth.income"
+							fill={chartConfig["lastMonth.income"].color}
+							radius={4}
 						/>
-						<Area
-							dataKey="expense"
-							type="natural"
-							fill="var(--color-expense)"
-							fillOpacity={0.4}
-							stroke="var(--color-expense)"
-							stackId="a"
+						<Bar
+							dataKey="lastMonth.expense"
+							fill={chartConfig["lastMonth.expense"].color}
+							radius={4}
 						/>
-					</AreaChart>
+						<Bar
+							dataKey="currentMonth.income"
+							fill={chartConfig["currentMonth.income"].color}
+							radius={4}
+						/>
+						<Bar
+							dataKey="currentMonth.expense"
+							fill={chartConfig["currentMonth.expense"].color}
+							radius={4}
+						/>
+					</BarChart>
 				</ChartContainer>
 			</CardContent>
 		</Card>
 	);
 };
 
-export default MonthlyTrendChart;
+export default ComparisonLastMonthChart;

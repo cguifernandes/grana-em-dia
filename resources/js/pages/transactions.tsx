@@ -1,4 +1,4 @@
-import DeleteDialog from "@/components/delete-dialog";
+import DeleteDialog from "@/components/layout/delete-dialog";
 import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { DialogHeader } from "@/components/ui/dialog";
 import { DialogContent } from "@/components/ui/dialog";
@@ -7,10 +7,10 @@ import { Dialog } from "@/components/ui/dialog";
 import { PageProps, TransactionType } from "@/types/types";
 import { Head, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
-import DataTable from "@/components/data-table";
+import DataTable from "@/components/layout/data-table";
 import FormTransactions from "@/components/forms/form-transactions";
 import { toast } from "sonner";
-import { renderIcon } from "@/utils/functions";
+import { formatCurrency, renderIcon } from "@/utils/functions";
 import { cn } from "@/lib/utils";
 
 const Transactions = () => {
@@ -111,10 +111,7 @@ const Transactions = () => {
 					)}
 				>
 					{transaction.type === "expense" ? "-" : ""}
-					{new Intl.NumberFormat("pt-BR", {
-						style: "currency",
-						currency: "BRL",
-					}).format(transaction.amount)}
+					{formatCurrency(transaction.amount)}
 				</span>
 			),
 		},

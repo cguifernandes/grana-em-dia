@@ -8,7 +8,7 @@ import {
 } from "../ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
 import { LabelList, RadialBar, RadialBarChart } from "recharts";
-import { generateChartConfig } from "@/utils/functions";
+import { formatCurrency, generateChartConfig } from "@/utils/functions";
 
 export type CategoryExpense = {
 	name: string;
@@ -19,6 +19,7 @@ export type CategoryExpense = {
 type ExpensesByCategoryChartProps = {
 	data: CategoryExpense[];
 	className?: string;
+	chartClassName?: string;
 };
 
 const chartColors = [
@@ -32,6 +33,7 @@ const chartColors = [
 const ExpensesByCategoryChart = ({
 	data,
 	className,
+	chartClassName,
 }: ExpensesByCategoryChartProps) => {
 	const chartConfig = generateChartConfig(data, chartColors);
 
@@ -47,7 +49,7 @@ const ExpensesByCategoryChart = ({
 			<CardContent className="px-0">
 				<ChartContainer
 					config={chartConfig}
-					className="!m-auto aspect-square max-h-[300px]"
+					className={cn("!m-auto aspect-square", chartClassName)}
 				>
 					<RadialBarChart
 						data={data.map((item) => ({
@@ -66,11 +68,7 @@ const ExpensesByCategoryChart = ({
 								<ChartTooltipContent
 									className="w-56"
 									formatter={(value, _, item) => {
-										const formatValue = new Intl.NumberFormat("pt-BR", {
-											style: "currency",
-											currency: "BRL",
-											minimumFractionDigits: 2,
-										}).format(Number(value));
+										const formatValue = formatCurrency(Number(value));
 
 										return (
 											<div className="flex items-center justify-between w-full text-xs text-muted-foreground">

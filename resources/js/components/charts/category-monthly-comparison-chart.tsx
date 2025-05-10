@@ -1,3 +1,5 @@
+import { ChartTooltip } from "../ui/chart";
+import { ChartContainer, ChartTooltipContent } from "../ui/chart";
 import { cn } from "@/lib/utils";
 import {
 	Card,
@@ -6,30 +8,25 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
-import {
-	ChartConfig,
-	ChartContainer,
-	ChartTooltip,
-	ChartTooltipContent,
-} from "../ui/chart";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { ChartConfig } from "../ui/chart";
+import { BarChart, Bar, CartesianGrid, XAxis } from "recharts";
 import { formatCurrency } from "@/utils/functions";
 
-export type MonthlyTrend = {
-	month: string;
+export type MonthlyComparison = {
+	category: string;
 	income: number;
 	expense: number;
 };
 
-type MonthlyTrendChartProps = {
-	data: MonthlyTrend[];
+type CategoryMonthlyComparisonProps = {
+	data: MonthlyComparison[];
 	className?: string;
 	chartClassName?: string;
 };
 
 const chartConfig = {
 	income: {
-		label: "Renda",
+		label: "Receitas",
 		color: "var(--chart-1)",
 	},
 	expense: {
@@ -38,40 +35,32 @@ const chartConfig = {
 	},
 } satisfies ChartConfig;
 
-const MonthlyTrendChart = ({
+const CategoryMonthlyComparisonChart = ({
 	data,
 	className,
 	chartClassName,
-}: MonthlyTrendChartProps) => {
+}: CategoryMonthlyComparisonProps) => {
 	return (
 		<Card className={cn("gap-6 p-4", className)}>
 			<CardHeader className="px-0">
-				<CardTitle>Tendências mensais</CardTitle>
+				<CardTitle>Comparativo por categoria</CardTitle>
 				<CardDescription>
-					Veja como suas receitas e despesas variam a cada mês.
+					Análise comparativa entre receitas e despesas por categoria
 				</CardDescription>
 			</CardHeader>
 
 			<CardContent className="px-0">
 				<ChartContainer
-					className={cn("!m-auto max-h-[300px]", chartClassName)}
+					className={cn("max-h-[300px]", chartClassName)}
 					config={chartConfig}
 				>
-					<AreaChart
-						accessibilityLayer
-						data={data}
-						margin={{
-							left: 12,
-							right: 12,
-						}}
-					>
+					<BarChart accessibilityLayer data={data}>
 						<CartesianGrid vertical={false} />
 						<XAxis
-							dataKey="month"
+							dataKey="category"
 							tickLine={false}
+							tickMargin={10}
 							axisLine={false}
-							tickMargin={4}
-							tickFormatter={(value) => value.slice(0, 3)}
 						/>
 						<ChartTooltip
 							cursor={false}
@@ -107,27 +96,13 @@ const MonthlyTrendChart = ({
 								/>
 							}
 						/>
-						<Area
-							dataKey="income"
-							type="natural"
-							fill="var(--color-income)"
-							fillOpacity={0.4}
-							stroke="var(--color-income)"
-							stackId="a"
-						/>
-						<Area
-							dataKey="expense"
-							type="natural"
-							fill="var(--color-expense)"
-							fillOpacity={0.4}
-							stroke="var(--color-expense)"
-							stackId="a"
-						/>
-					</AreaChart>
+						<Bar dataKey="income" fill="var(--color-income)" radius={4} />
+						<Bar dataKey="expense" fill="var(--color-expense)" radius={4} />
+					</BarChart>
 				</ChartContainer>
 			</CardContent>
 		</Card>
 	);
 };
 
-export default MonthlyTrendChart;
+export default CategoryMonthlyComparisonChart;

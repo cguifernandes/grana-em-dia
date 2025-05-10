@@ -1,7 +1,7 @@
 import { Pencil, Search, Trash } from "lucide-react";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
 	Table,
 	TableBody,
@@ -18,8 +18,7 @@ import {
 	PaginationLink,
 	PaginationPrevious,
 	PaginationNext,
-	PaginationEllipsis,
-} from "./ui/pagination";
+} from "../ui/pagination";
 
 type Column<T> = {
 	header: string;

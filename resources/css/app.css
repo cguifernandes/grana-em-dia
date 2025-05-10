@@ -88,11 +88,12 @@
 	--input: oklch(85% 0.03 142);
 	--ring: oklch(62% 0.12 142);
 
-	--chart-1: oklch(78% 0.12 142);
-	--chart-2: oklch(68% 0.14 142);
-	--chart-3: oklch(58% 0.16 142);
-	--chart-4: oklch(48% 0.18 142);
-	--chart-5: oklch(38% 0.2 142);
+	--chart-1: oklch(0.77 0.215571 132.4509);
+	--chart-2: oklch(0.72 0.129759 217.9549);
+	--chart-3: oklch(0.58 0.2305 277.07);
+	--chart-4: oklch(0.8 0.163766 83.1104);
+	--chart-5: oklch(0.67 0.295 322.08);
+	--chart-6: oklch(0.6 0.242472 293.8885);
 
 	/* Sidebar colors */
 	--sidebar-background: oklch(95% 0.02 142);
@@ -143,11 +144,12 @@
 	--input: oklch(30% 0.04 142);
 	--ring: oklch(55% 0.12 142);
 
-	--chart-1: oklch(78% 0.12 142);
-	--chart-2: oklch(68% 0.14 142);
-	--chart-3: oklch(58% 0.16 142);
-	--chart-4: oklch(48% 0.18 142);
-	--chart-5: oklch(38% 0.2 142);
+	--chart-1: oklch(0.77 0.215571 132.4509);
+	--chart-2: oklch(0.72 0.129759 217.9549);
+	--chart-3: oklch(0.58 0.2305 277.07);
+	--chart-4: oklch(0.8 0.163766 83.1104);
+	--chart-5: oklch(0.67 0.295 322.08);
+	--chart-6: oklch(0.6 0.242472 293.8885);
 
 	--sidebar-background: oklch(20% 0.025 142);
 	--sidebar-foreground: oklch(95% 0.015 142);

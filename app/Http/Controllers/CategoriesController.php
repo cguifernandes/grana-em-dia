@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use App\Models\Category;
 use Illuminate\Support\Facades\Redirect;
 
-class CategoryController extends Controller
+class CategoriesController extends Controller
 {
     public function index()
     {

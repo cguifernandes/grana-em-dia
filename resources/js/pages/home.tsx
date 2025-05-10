@@ -1,4 +1,4 @@
-import BalanceCard from "@/components/balance-card";
+import BalanceCard from "@/components/layout/balance-card";
 import ExpensesByCategoryChart, {
 	CategoryExpense,
 } from "@/components/charts/expenses-by-category-chart";
@@ -128,6 +128,7 @@ const Home = () => {
 						<MonthlyTrendChart className="flex-1" data={mockMonthlyTrends} />
 						<ExpensesByCategoryChart
 							className="flex-1"
+							chartClassName="max-h-[300px]"
 							data={mockCategoryExpenses}
 						/>
 					</div>

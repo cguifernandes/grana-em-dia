@@ -11,8 +11,8 @@ import { CategoryType, PageProps } from "@/types/types";
 import { Head, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import DeleteDialog from "@/components/delete-dialog";
-import DataTable from "@/components/data-table";
+import DeleteDialog from "@/components/layout/delete-dialog";
+import DataTable from "@/components/layout/data-table";
 import { renderIcon } from "@/utils/functions";
 
 const Category = () => {

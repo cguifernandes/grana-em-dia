@@ -1,5 +1,5 @@
-import { ChartPie, CreditCard, Folder } from "lucide-react";
-import Logo from "../../assets/logo.svg";
+import { ChartPie, CreditCard, File, Folder } from "lucide-react";
+import Logo from "../../../assets/logo.svg";
 import {
 	Sidebar,
 	SidebarContent,
@@ -9,7 +9,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-} from "./ui/sidebar";
+} from "../ui/sidebar";
 import { Link } from "@inertiajs/react";
 
 const items = [
@@ -27,6 +27,11 @@ const items = [
 		title: "Transações",
 		url: "/transactions",
 		icon: <CreditCard size={18} />,
+	},
+	{
+		title: "Relatórios",
+		url: "/reports",
+		icon: <File size={18} />,
 	},
 ];
 

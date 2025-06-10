@@ -9,7 +9,7 @@ import DashboardLayout from "@/components/layout/dashboard-layout";
 import TransactionList, {
 	Transaction,
 } from "@/components/layout/transaction-list";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import {
 	ArrowDownRight,
 	ArrowUpRight,
@@ -20,6 +20,7 @@ import {
 	TrendingUp,
 	Wifi,
 } from "lucide-react";
+import { PageProps } from "@/types/types";
 
 const mockTransactions: Transaction[] = [
 	{
@@ -87,6 +88,8 @@ const mockCategoryExpenses: CategoryExpense[] = [
 ];
 
 const Home = () => {
+	const { finances } = usePage<PageProps>().props;
+
 	return (
 		<>
 			<Head title="Home" />
@@ -97,30 +100,34 @@ const Home = () => {
 							icon={<DollarSign className="text-yellow-500" size={16} />}
 							title="Saldo Total"
 							className="flex-1"
-							amount={1000}
+							amount={finances.balance}
 							iconClassName="bg-yellow-500/20"
+							description="Valor total disponível"
 						/>
 						<BalanceCard
 							icon={<ArrowUpRight className="text-primary" size={16} />}
 							title="Receitas"
 							className="flex-1"
-							amount={1000}
+							amount={finances.income}
 							iconClassName="bg-primary/20"
+							description="Total de entradas financeiras do mês atual"
 						/>
 						<BalanceCard
 							icon={<ArrowDownRight className="text-destructive" size={16} />}
 							title="Despesas"
 							className="flex-1"
-							amount={1000}
+							amount={finances.expense}
 							iconClassName="bg-destructive/20"
+							description="Gastos e saídas financeiras do mês atual"
 						/>
 						<BalanceCard
 							icon={<TrendingUp className="text-blue-500" size={16} />}
 							title="Economia"
 							className="flex-1"
-							amount={72}
+							amount={finances.savings_percent}
 							isPercentage
 							iconClassName="bg-blue-500/20"
+							description="Percentual em relação à receita total"
 						/>
 					</div>
 

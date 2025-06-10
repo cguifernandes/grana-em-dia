@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\Transaction;
 use App\Models\Category;
+use Carbon\Carbon;
 
 class TransactionsController extends Controller
 {
@@ -51,6 +52,9 @@ class TransactionsController extends Controller
             'type.in' => 'O tipo deve ser despesa ou receita.',
         ]);
 
+        // Converte a data para o formato 'Y-m-d H:i:s'
+        $validated['date'] = Carbon::parse($validated['date'])->format('Y-m-d H:i:s');
+
         $transaction = Transaction::create([
             'description' => $validated['description'],
             'amount' => $validated['amount'],
@@ -59,9 +63,10 @@ class TransactionsController extends Controller
             'type' => $validated['type'],
             'user_id' => auth()->id(),
         ]);
-    
+
         return Redirect::back()->with('success', 'Transação criada com sucesso.');
     }
+
 
     public function update(Request $request, Transaction $transaction) 
     {

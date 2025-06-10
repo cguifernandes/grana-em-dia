@@ -1,4 +1,5 @@
 import FormRegister from "@/components/forms/form-register";
+import AuthLayout from "@/components/layout/auth.layout";
 import {
 	Card,
 	CardContent,
@@ -7,6 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { SidebarInset } from "@/components/ui/sidebar";
 import { PageProps } from "@/types/types";
 import { Head, Link, usePage } from "@inertiajs/react";
 import { useEffect } from "react";
@@ -24,17 +26,7 @@ const Register = () => {
 	}, [flash]);
 
 	return (
-		<>
-			<Head title="Register" />
-			<main className="min-h-screen flex flex-col gap-y-6 items-center justify-center bg-gradient-to-br from-primary/10 to-white p-4">
-				<div className="flex flex-col items-center gap-y-1">
-					<h1 className="md:text-5xl text-4xl text-primary font-bold text-center">
-						Grana Em Dia
-					</h1>
-					<span className="text-foreground text-sm">
-						Controle suas finanças com facilidade
-					</span>
-				</div>
+		<AuthLayout title="Register">
 				<Card className="max-w-xl w-full">
 					<CardHeader>
 						<CardTitle className="text-xl">Criar conta</CardTitle>
@@ -60,8 +52,7 @@ const Register = () => {
 						</span>
 					</CardFooter>
 				</Card>
-			</main>
-		</>
+		</AuthLayout>
 	);
 };
 

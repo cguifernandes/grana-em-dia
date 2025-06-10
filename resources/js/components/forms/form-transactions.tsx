@@ -78,7 +78,7 @@ const FormTransactions = ({
 			});
 
 			if (defaultValues) {
-				put(route("transaction.update", { transaction: defaultValues.id }), {
+				put(route("transaction.update", { transaction: defaultValues.id }),  {
 					onSuccess: () => {
 						onSuccess();
 					},

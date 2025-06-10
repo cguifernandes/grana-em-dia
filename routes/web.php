@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\ReportsController;
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 

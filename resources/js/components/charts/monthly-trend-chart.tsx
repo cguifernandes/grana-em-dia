@@ -14,6 +14,7 @@ import {
 } from "../ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { formatCurrency } from "@/utils/functions";
+import { useEffect } from "react";
 
 export type MonthlyTrend = {
 	month: string;
@@ -43,6 +44,15 @@ const MonthlyTrendChart = ({
 	className,
 	chartClassName,
 }: MonthlyTrendChartProps) => {
+	useEffect(() => {
+		fetch("/finances/trends").then(async (response) => {
+			const data = await response.json()
+
+			console.log({data})
+		})
+
+	}, [])
+ 
 	return (
 		<Card className={cn("gap-6 p-4", className)}>
 			<CardHeader className="px-0">

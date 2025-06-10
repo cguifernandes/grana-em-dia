@@ -92,7 +92,7 @@ const Home = () => {
 			<Head title="Home" />
 			<DashboardLayout title="Dashboard">
 				<div className="h-full flex flex-col gap-y-4">
-					<div className="flex gap-x-2">
+					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2">
 						<BalanceCard
 							icon={<DollarSign className="text-yellow-500" size={16} />}
 							title="Saldo Total"
@@ -124,11 +124,10 @@ const Home = () => {
 						/>
 					</div>
 
-					<div className="flex gap-x-2">
+					<div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
 						<MonthlyTrendChart className="flex-1" data={mockMonthlyTrends} />
 						<ExpensesByCategoryChart
 							className="flex-1"
-							chartClassName="max-h-[300px]"
 							data={mockCategoryExpenses}
 						/>
 					</div>

@@ -52,7 +52,7 @@ const MonthlyTrendChart = ({
 				</CardDescription>
 			</CardHeader>
 
-			<CardContent className="px-0">
+			<CardContent className="px-0 h-full">
 				<ChartContainer
 					className={cn("!m-auto max-h-[300px]", chartClassName)}
 					config={chartConfig}

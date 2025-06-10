@@ -67,7 +67,7 @@ const TransactionList = ({
 	return (
 		<Card className={cn("gap-4 p-4", className)}>
 			<CardHeader className="px-0">
-				<div className="flex justify-between items-center">
+				<div className="flex  justify-between items-start sm:items-center gap-4">
 					<div className="flex flex-col gap-y-1">
 						<CardTitle>Últimas transações</CardTitle>
 						<CardDescription>Acompanhe seus gastos e receitas</CardDescription>
@@ -82,16 +82,16 @@ const TransactionList = ({
 				</div>
 			</CardHeader>
 			<CardContent className="px-0">
-				<div className="gap-y-2 flex flex-col pb-4">
+				<div className="gap-y-2 flex flex-col">
 					{displayedTransactions.map((transaction) => (
 						<div
 							key={transaction.id}
-							className="flex items-center border border-border justify-between p-3 rounded-md hover:bg-muted transition-colors"
+							className="flex flex-col sm:flex-row items-start sm:items-center border border-border justify-between p-3 rounded-md hover:bg-muted transition-colors gap-3 sm:gap-4"
 						>
-							<div className="flex items-center gap-x-4">
+							<div className="flex items-center gap-x-4 w-full sm:w-auto">
 								<div
 									className={cn(
-										"p-2.5 rounded-md",
+										"p-2.5 rounded-md shrink-0",
 										transaction.type === "income"
 											? "bg-primary/20 text-primary"
 											: "bg-destructive/20 text-destructive",
@@ -99,11 +99,11 @@ const TransactionList = ({
 								>
 									{transaction.icon}
 								</div>
-								<div className="flex flex-col gap-y-1">
-									<h3 className="leading-none font-medium">
-										{transaction.category}
+								<div className="flex flex-col gap-y-1 min-w-0">
+									<h3 className="leading-none font-medium truncate">
+										{transaction.description}
 									</h3>
-									<div className="flex items-center text-sm gap-x-2">
+									<div className="flex items-center text-sm gap-x-2 flex-wrap">
 										<span className="text-muted-foreground leading-none">
 											{transaction.category}
 										</span>
@@ -116,7 +116,7 @@ const TransactionList = ({
 									</div>
 								</div>
 							</div>
-							<div className="flex gap-x-2 items-center">
+							<div className="flex gap-x-2 items-center w-full sm:w-auto justify-between sm:justify-end">
 								<span
 									className={cn(
 										"leading-none font-medium",
@@ -146,7 +146,7 @@ const TransactionList = ({
 				</div>
 
 				{showAll && totalPages > 1 && (
-					<Pagination>
+					<Pagination className="py-4">
 						<PaginationContent>
 							<PaginationPrevious
 								onClick={() => {
@@ -172,13 +172,14 @@ const TransactionList = ({
 					</Pagination>
 				)}
 
-				<div className="pt-4">
-					<div className="flex justify-between items-center p-3 border border-border rounded-md">
-						<span>Saldo</span>
-						<span className="text-xl leading-none font-medium">
-							R$ 12.000,50
-						</span>
-					</div>
+				<div
+					className={cn(
+						"flex justify-between items-center p-3 border border-border rounded-md",
+						!showAll && "!mt-4",
+					)}
+				>
+					<span>Saldo</span>
+					<span className="text-xl leading-none font-medium">R$ 12.000,50</span>
 				</div>
 			</CardContent>
 		</Card>

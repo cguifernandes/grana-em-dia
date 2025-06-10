@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registerSchema, registerSchemaType } from "@/utils/zod/registerSchema";
-import { useForm } from "@inertiajs/react";
+import { router, useForm } from "@inertiajs/react";
 import InputPassword from "../input-password";
 import { Button } from "../ui/button";
 
@@ -35,7 +35,11 @@ const FormRegister = () => {
 				passwordConfirmation: "",
 			});
 
-			post(route("register.store"));
+			post(route("register.store"), {
+				onSuccess: () => {
+					router.visit('/login')
+				}
+			});
 		}
 	};
 
@@ -91,6 +95,7 @@ const FormRegister = () => {
 						id="passwordConfirmation"
 						placeholder="******"
 						aria-invalid={!!errors.passwordConfirmation}
+						maxLength={8}
 					/>
 					{errors.passwordConfirmation && (
 						<p className="text-xs text-destructive">

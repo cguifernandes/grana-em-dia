@@ -7,7 +7,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\FinancesController;
 use App\Http\Controllers\ReportsController;
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -25,6 +27,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->name('transaction.destroy');
 
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
+
+    Route::get('/finances/trends', [FinancesController::class, 'getMonthlyTrends'])->name('finances.trends');
 });
 
 Route::middleware('guest')->group(function () {

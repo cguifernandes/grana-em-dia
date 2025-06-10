@@ -12,5 +12,4 @@ class ReportsController extends Controller
     {
         return Inertia::render('reports');
     }
-
 }

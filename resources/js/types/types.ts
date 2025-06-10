@@ -10,7 +10,15 @@ export type PageProps = {
 	};
 	categories?: CategoryType[];
 	transactions?: TransactionType[];
+	finances: Finances
 };
+
+export type Finances = {
+	balance: number;
+	income: number; 
+	expense: number;
+	savings_percent: number;
+}
 
 export type UserType = {
 	id: number;

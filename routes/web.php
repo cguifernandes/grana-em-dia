@@ -10,7 +10,7 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FinancesController;
 use App\Http\Controllers\ReportsController;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');

@@ -13,6 +13,13 @@ export type PageProps = {
 	finances: Finances
 };
 
+export type ApiResponse<T> = {
+	success: boolean;
+	message: string;
+	data: T;
+	error?: string;
+}
+
 export type Finances = {
 	balance: number;
 	income: number; 

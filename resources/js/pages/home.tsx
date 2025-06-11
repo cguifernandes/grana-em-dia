@@ -70,15 +70,6 @@ const mockTransactions: Transaction[] = [
 	},
 ];
 
-const mockMonthlyTrends: MonthlyTrend[] = [
-	{ month: "January", income: 4500, expense: 3000 },
-	{ month: "February", income: 4200, expense: 3200 },
-	{ month: "March", income: 5000, expense: 3100 },
-	{ month: "April", income: 7000, expense: 2800 },
-	{ month: "May", income: 6500, expense: 3300 },
-	{ month: "June", income: 5800, expense: 3400 },
-];
-
 const mockCategoryExpenses: CategoryExpense[] = [
 	{ name: "Moradia", value: 1200, fill: "var(--chart-1)" },
 	{ name: "Alimentação", value: 500, fill: "var(--chart-2)" },
@@ -132,10 +123,9 @@ const Home = () => {
 					</div>
 
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-						<MonthlyTrendChart className="flex-1" data={mockMonthlyTrends} />
+						<MonthlyTrendChart className="flex-1" />
 						<ExpensesByCategoryChart
 							className="flex-1"
-							data={mockCategoryExpenses}
 						/>
 					</div>
 

@@ -14,7 +14,10 @@ import {
 } from "../ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { formatCurrency } from "@/utils/functions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ApiResponse } from "@/types/types";
+import { toast } from "sonner";
+import { Skeleton } from "../ui/skeleton";
 
 export type MonthlyTrend = {
 	month: string;
@@ -23,7 +26,6 @@ export type MonthlyTrend = {
 };
 
 type MonthlyTrendChartProps = {
-	data: MonthlyTrend[];
 	className?: string;
 	chartClassName?: string;
 };
@@ -31,38 +33,52 @@ type MonthlyTrendChartProps = {
 const chartConfig = {
 	income: {
 		label: "Renda",
-		color: "var(--chart-1)",
+		color: "var(--primary)",
 	},
 	expense: {
 		label: "Despesas",
-		color: "var(--chart-2)",
+		color: "var(--destructive)",
 	},
 } satisfies ChartConfig;
 
 const MonthlyTrendChart = ({
-	data,
 	className,
 	chartClassName,
 }: MonthlyTrendChartProps) => {
+	const [isLoading, setIsLoading] = useState(true)
+	const [data, setData] = useState<MonthlyTrend[]>([])
+
 	useEffect(() => {
 		fetch("/finances/trends").then(async (response) => {
-			const data = await response.json()
+			const data = await (response.json()) as ApiResponse<MonthlyTrend[]>
 
-			console.log({data})
+			if (!response.ok || !data.success) {
+				toast.error(data.message);
+
+				return;
+			}
+
+			setData(data.data)
+		}).catch((error) => {
+			console.log("Erro ao buscar dados: " + error)
+			toast.error("Erro ao buscar dados, por favor tente novamente mais tarde")
+		}).finally(() => {
+			setIsLoading(false)
 		})
-
 	}, [])
- 
+
 	return (
-		<Card className={cn("gap-6 p-4", className)}>
+		<Card className={cn("gap-6 p-4 min-h-[250px]", className)}>
 			<CardHeader className="px-0">
 				<CardTitle>Tendências mensais</CardTitle>
 				<CardDescription>
-					Veja como suas receitas e despesas variam a cada mês.
+					Veja como suas receitas e despesas variam nos últimos 6 meses.
 				</CardDescription>
 			</CardHeader>
 
 			<CardContent className="px-0 h-full">
+				{
+					isLoading ? <Skeleton className="w-full h-full" /> : 
 				<ChartContainer
 					className={cn("!m-auto max-h-[300px]", chartClassName)}
 					config={chartConfig}
@@ -131,10 +147,11 @@ const MonthlyTrendChart = ({
 							fill="var(--color-expense)"
 							fillOpacity={0.4}
 							stroke="var(--color-expense)"
-							stackId="a"
+							stackId="b"
 						/>
 					</AreaChart>
 				</ChartContainer>
+				}
 			</CardContent>
 		</Card>
 	);

@@ -28,7 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
 
-    Route::get('/finances/trends', [FinancesController::class, 'getMonthlyTrends'])->name('finances.trends');
+    Route::get('/finances/trends', [FinancesController::class, 'trendsLastSixMonths'])->name('finances.trends');
+    Route::get('/finances/categories', [FinancesController::class, 'expensesByCategory'])->name('finances.categories');
 });
 
 Route::middleware('guest')->group(function () {

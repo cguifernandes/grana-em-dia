@@ -17,10 +17,8 @@ import {
 import { Pie, PieChart, Sector } from "recharts";
 import { formatCurrency, generateChartConfig } from "@/utils/functions";
 import CategoryCard from "../layout/category-card";
-import { useEffect, useState } from "react";
-import { ApiResponse, CategoryType } from "@/types/types";
-import { toast } from "sonner";
-import { Skeleton } from "../ui/skeleton";
+import { useState } from "react";
+import { CategoryType } from "@/types/types";
 
 export type CategoryExpense = {
 	name: string;
@@ -30,6 +28,7 @@ export type CategoryExpense = {
 
 type ExpensesByCategoryChartProps = {
 	className?: string;
+	data: CategoryExpense[]
 	chartClassName?: string;
 	categories?: (Omit<CategoryType, "created_at" | "updated_at"> & {
 		amount: number;
@@ -49,34 +48,11 @@ const ExpensesByCategoryChart = ({
 	className,
 	chartClassName,
 	categories,
+	data,
 	interactive = false,
 }: ExpensesByCategoryChartProps) => {
-	const [isLoading, setIsLoading] = useState(true)
-	const [data, setData] = useState<CategoryExpense[]>([])
 	const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 	const chartConfig = generateChartConfig(data, chartColors);
-
-	useEffect(() => {
-		const currentDate = new Date();
-		const month = currentDate.getMonth() + 1;
-
-		fetch(`/finances/categories?month=${month}`).then(async (response) => {
-			const data = await (response.json()) as ApiResponse<CategoryExpense[]>
-
-			if (!response.ok || !data.success) {
-				toast.error(data.message);
-
-				return;
-			}
-
-			setData(data.data)
-		}).catch((error) => {
-			console.log("Erro ao buscar dados: " + error)
-			toast.error("Erro ao buscar dados, por favor tente novamente mais tarde")
-		}).finally(() => {
-			setIsLoading(false)
-		})
-	}, [])
 
 	const handleMouseEnter = (name: string) => {
 		setActiveIndex(data.findIndex((item) => item.name === name));
@@ -97,8 +73,6 @@ const ExpensesByCategoryChart = ({
 
 
 			<CardContent className="px-0 h-full">
-				{
-					isLoading ? <Skeleton className="w-full h-full" /> : 
 				<ChartContainer
 					config={chartConfig}
 					className={cn("!m-auto max-h-[300px]", chartClassName)}
@@ -158,7 +132,6 @@ const ExpensesByCategoryChart = ({
 						)}
 					</PieChart>
 				</ChartContainer>
-				}
 			</CardContent>
 
 			{interactive && (

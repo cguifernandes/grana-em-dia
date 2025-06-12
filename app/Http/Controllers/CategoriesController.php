@@ -21,6 +21,14 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
+         $user = auth()->user();
+
+        if ($user->categories()->count() >= 6) {
+            return Redirect::back()->withErrors([
+                'error' => 'Você só pode criar até 6 categorias.',
+            ]);
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:20'],
         ], [

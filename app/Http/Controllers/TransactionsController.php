@@ -16,6 +16,7 @@ class TransactionsController extends Controller
     {
         $transactions = Transaction::with('category')
             ->where('user_id', auth()->id())
+            ->orderBy('date', 'desc')
             ->get();
 
         $categories = Category::where('user_id', auth()->id())->get();
@@ -52,7 +53,6 @@ class TransactionsController extends Controller
             'type.in' => 'O tipo deve ser despesa ou receita.',
         ]);
 
-        // Converte a data para o formato 'Y-m-d H:i:s'
         $validated['date'] = Carbon::parse($validated['date'])->format('Y-m-d H:i:s');
 
         $transaction = Transaction::create([

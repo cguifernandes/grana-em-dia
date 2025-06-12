@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { categoryIcons } from "@/utils/functions";
 import { CategoryColors } from "@/utils/enums";
 import { CategoryType } from "@/types/types";
+import { toast } from "sonner";
 
 type FormCategoryProps = {
 	onSuccess: () => void;
@@ -52,6 +53,9 @@ const FormCategory = ({ onSuccess, defaultValues }: FormCategoryProps) => {
 					onSuccess: () => {
 						onSuccess();
 					},
+					onError: (flag) => {
+						toast.error(flag.error)
+					}
 				});
 			}
 		}

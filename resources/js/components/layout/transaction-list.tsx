@@ -18,19 +18,25 @@ import {
 } from "../ui/pagination";
 import { Button } from "../ui/button";
 import { Link } from "@inertiajs/react";
+import { renderIcon } from "@/utils/functions";
 
 export type Transaction = {
 	id: string;
 	description: string;
 	amount: number;
-	category: string;
 	date: string;
+	category: {
+		name: string
+		icon: string;
+	}
 	type: "income" | "expense";
-	icon: React.ReactNode;
 };
 
 type TransactionListProps = {
-	transactions: Transaction[];
+	data: {
+		transactions: Transaction[];
+		balance: number
+	};
 	className?: string;
 	showAll?: boolean;
 };
@@ -38,19 +44,19 @@ type TransactionListProps = {
 const ITEMS_PER_PAGE = 6;
 
 const TransactionList = ({
-	transactions,
+	data,
 	className,
 	showAll = false,
 }: TransactionListProps) => {
 	const [currentPage, setCurrentPage] = useState(1);
-	const totalPages = Math.ceil(transactions.length / ITEMS_PER_PAGE);
+	const totalPages = Math.ceil(data.transactions.length / ITEMS_PER_PAGE);
 
 	const displayedTransactions = showAll
-		? transactions.slice(
+		? data.transactions.slice(
 				(currentPage - 1) * ITEMS_PER_PAGE,
 				currentPage * ITEMS_PER_PAGE,
 			)
-		: transactions.slice(0, ITEMS_PER_PAGE);
+		: data.transactions.slice(0, ITEMS_PER_PAGE);
 
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
@@ -97,7 +103,7 @@ const TransactionList = ({
 											: "bg-destructive/20 text-destructive",
 									)}
 								>
-									{transaction.icon}
+									{renderIcon(transaction.category.icon)}
 								</div>
 								<div className="flex flex-col gap-y-1 min-w-0">
 									<h3 className="leading-none font-medium truncate">
@@ -105,7 +111,7 @@ const TransactionList = ({
 									</h3>
 									<div className="flex items-center text-sm gap-x-2 flex-wrap">
 										<span className="text-muted-foreground leading-none">
-											{transaction.category}
+											{transaction.category.name}
 										</span>
 										<span className="text-muted-foreground leading-none">
 											•
@@ -179,7 +185,11 @@ const TransactionList = ({
 					)}
 				>
 					<span>Saldo</span>
-					<span className="text-xl leading-none font-medium">R$ 12.000,50</span>
+					<span className="text-xl leading-none font-medium">
+						R$ {data.balance.toLocaleString("pt-BR", {
+							minimumFractionDigits: 2,
+						})}
+					</span>
 				</div>
 			</CardContent>
 		</Card>

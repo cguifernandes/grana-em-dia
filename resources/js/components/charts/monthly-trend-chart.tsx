@@ -26,6 +26,7 @@ export type MonthlyTrend = {
 };
 
 type MonthlyTrendChartProps = {
+	data: MonthlyTrend[]
 	className?: string;
 	chartClassName?: string;
 };
@@ -44,28 +45,8 @@ const chartConfig = {
 const MonthlyTrendChart = ({
 	className,
 	chartClassName,
+	data
 }: MonthlyTrendChartProps) => {
-	const [isLoading, setIsLoading] = useState(true)
-	const [data, setData] = useState<MonthlyTrend[]>([])
-
-	useEffect(() => {
-		fetch("/finances/trends").then(async (response) => {
-			const data = await (response.json()) as ApiResponse<MonthlyTrend[]>
-
-			if (!response.ok || !data.success) {
-				toast.error(data.message);
-
-				return;
-			}
-
-			setData(data.data)
-		}).catch((error) => {
-			console.log("Erro ao buscar dados: " + error)
-			toast.error("Erro ao buscar dados, por favor tente novamente mais tarde")
-		}).finally(() => {
-			setIsLoading(false)
-		})
-	}, [])
 
 	return (
 		<Card className={cn("gap-6 p-4 min-h-[250px]", className)}>
@@ -77,8 +58,6 @@ const MonthlyTrendChart = ({
 			</CardHeader>
 
 			<CardContent className="px-0 h-full">
-				{
-					isLoading ? <Skeleton className="w-full h-full" /> : 
 				<ChartContainer
 					className={cn("!m-auto max-h-[300px]", chartClassName)}
 					config={chartConfig}
@@ -151,7 +130,6 @@ const MonthlyTrendChart = ({
 						/>
 					</AreaChart>
 				</ChartContainer>
-				}
 			</CardContent>
 		</Card>
 	);

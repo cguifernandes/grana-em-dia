@@ -55,6 +55,8 @@ class FinancesController extends Controller
                 'data' => $monthlyTrends
             ]);
         } catch (Exception $e) {
+            session()->flash('error', 'Erro ao carregar os dados financeiros.');
+
             return response()->json([
                 'success' => false,
                 'message' => 'Erro ao carregar os dados financeiros.',
@@ -63,26 +65,19 @@ class FinancesController extends Controller
         }
     }
 
-    public function expensesByCategory(Request $request)
+    public function expensesByCategory()
     {
         try {
             $user = Auth::user();
 
-            $month = $request->query('month');
-            $year = date('Y');
-
-            if (!$month || $month < 1 || $month > 12) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Parâmetro 'month' inválido ou ausente. Use valores de 1 a 12."
-                ], 400);
-            }
+            $month = date('m');
+            $year = date('Y'); 
 
             $expenses = $user->transactions()
                 ->selectRaw("category_id, SUM(amount) as total")
                 ->where('type', 'expense')
-                ->whereYear('date', $year)     
-                ->whereMonth('date', $month)   
+                ->whereYear('date', $year)
+                ->whereMonth('date', $month)
                 ->groupBy('category_id')
                 ->with('category:id,name,color')
                 ->get()
@@ -100,11 +95,100 @@ class FinancesController extends Controller
                 'data' => $expenses,
             ]);
         } catch (\Exception $e) {
-            Log::error('Erro ao buscar despesas por categoria: ' . $e->getMessage());
+            session()->flash('error', 'Erro ao buscar despesas por categoria.');
 
             return response()->json([
                 'success' => false,
                 'message' => 'Erro ao buscar despesas por categoria.',
+            ], 500);
+        }
+    }
+
+    public function calculateSummary()
+    {
+        try {
+            $user = Auth::user();
+            $now = Carbon::now();
+
+            $income = $user->transactions()
+                ->where('type', 'income')
+                ->sum('amount');
+
+            $expense = $user->transactions()
+                ->where('type', 'expense')
+                ->sum('amount');
+
+            $balance = $income - $expense;
+            $savingsPercent = $income > 0 ? ($balance / $income) * 100 : 0;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Resumo financeiro carregado com sucesso.',
+                'data' => [
+                    'income' => $income,
+                    'expense' => $expense,
+                    'balance' => $balance,
+                    'savings_percent' => round($savingsPercent, 2),
+                ],
+            ]);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Erro ao gerar resumo financeiro.');
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao gerar resumo financeiro.',
+            ], 500);
+        }
+    }
+
+    public function latestTransactions()
+    {
+        try {
+            $user = Auth::user();
+
+            $transactions = $user->transactions()
+                ->with('category:id,name,icon') 
+                ->orderBy('date', 'desc')
+                ->orderBy('id', 'desc')
+                ->get()
+                ->map(function ($t) {
+                    return [
+                        'id' => (string) $t->id,
+                        'description' => $t->description,
+                        'amount' => (float) $t->amount,
+                        'category' => [
+                            'name' => $t->category->name,
+                            'icon' => $t->category->icon, 
+                        ],
+                        'date' => Carbon::parse($t->date)->toDateString(),
+                        'type' => $t->type,
+                    ];
+                });
+
+            $income = $user->transactions()
+                ->where('type', 'income')
+                ->sum('amount');
+
+            $expense = $user->transactions()
+                ->where('type', 'expense')
+                ->sum('amount');
+
+            $balance = $income - $expense;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Últimas transações carregadas com sucesso.',
+                'data' => [
+                    'transactions' => $transactions,
+                    'balance' => $balance,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Erro ao gerar resumo financeiro.');
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao buscar transações recentes.',
             ], 500);
         }
     }

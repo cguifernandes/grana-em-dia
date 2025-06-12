@@ -36,6 +36,7 @@ type DataTableProps<T> = {
 	onEdit?: (item: T) => void;
 	onDelete?: (item: T) => void;
 	emptyMessage?: string;
+	showPagination?: boolean
 };
 
 const DataTable = <T extends { id: number | string }>({
@@ -47,6 +48,7 @@ const DataTable = <T extends { id: number | string }>({
 	addButtonText = "Adicionar novo item",
 	onEdit,
 	onDelete,
+	showPagination = true,
 	emptyMessage = "Nenhum item encontrado",
 }: DataTableProps<T>) => {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -180,6 +182,8 @@ const DataTable = <T extends { id: number | string }>({
 					Mostrando {paginatedData?.length} de {filteredData?.length} registros
 				</span>
 
+{
+	showPagination && 
 				<Pagination>
 					<PaginationContent>
 						<PaginationPrevious
@@ -204,6 +208,7 @@ const DataTable = <T extends { id: number | string }>({
 						/>
 					</PaginationContent>
 				</Pagination>
+}
 			</div>
 		</>
 	);

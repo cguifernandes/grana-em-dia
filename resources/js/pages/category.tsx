@@ -120,6 +120,7 @@ const Category = () => {
 						onEdit={handleEditCategory}
 						onDelete={handleDeleteCategory}
 						emptyMessage="Nenhuma categoria encontrada"
+						showPagination={false}
 					/>
 
 					<Dialog open={dialogOpen} onOpenChange={handleCloseDialog}>

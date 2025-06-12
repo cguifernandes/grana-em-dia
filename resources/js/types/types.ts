@@ -1,3 +1,6 @@
+import { CategoryExpense } from "@/components/charts/expenses-by-category-chart";
+import { MonthlyTrend } from "@/components/charts/monthly-trend-chart";
+import { Transaction } from "@/components/layout/transaction-list";
 import { CategoryColors } from "@/utils/enums";
 
 export type PageProps = {
@@ -10,7 +13,16 @@ export type PageProps = {
 	};
 	categories?: CategoryType[];
 	transactions?: TransactionType[];
-	finances: Finances
+	dashboard: {
+		summary: ApiResponse<Summary>
+		trends: ApiResponse<MonthlyTrend[]>
+		categories: ApiResponse<CategoryExpense[]>;
+		transactions: ApiResponse<{
+			transactions: Transaction[];
+			balance: number
+		}>
+	}
+	
 };
 
 export type ApiResponse<T> = {
@@ -20,7 +32,7 @@ export type ApiResponse<T> = {
 	error?: string;
 }
 
-export type Finances = {
+export type Summary = {
 	balance: number;
 	income: number; 
 	expense: number;

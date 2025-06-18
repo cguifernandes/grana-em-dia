@@ -16,10 +16,16 @@ class FinancesController extends Controller
 
             Carbon::setLocale('pt_BR');
 
+            $driver = DB::getDriverName();
+
             $startDate = Carbon::now()->subMonths(5)->startOfMonth();
 
+            $dateFormat = $driver === 'pgsql'
+                ? "TO_CHAR(date, 'YYYY-MM')"  
+                : "DATE_FORMAT(date, '%Y-%m')";
+
             $rawData = $user->transactions()
-                ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, type, SUM(amount) as total")
+                ->selectRaw("$dateFormat as month, type, SUM(amount) as total")
                 ->where('date', '>=', $startDate)
                 ->groupBy('month', 'type')
                 ->orderBy('month')

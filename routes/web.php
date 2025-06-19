@@ -27,6 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->name('transaction.destroy');
 
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
+
+    Route::get('/reports/monthly-analysis', [FinancesController::class, 'reportsMonthlyAnalysis'])->name('finances.monthly-analysis');
+    Route::get('/reports/categories', [FinancesController::class, 'reportsCategories'])->name('finances.categories');
 });
 
 Route::middleware('guest')->group(function () {

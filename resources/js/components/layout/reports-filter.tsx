@@ -19,7 +19,6 @@ const ReportsFilter = ({ onFilterChange }: ReportFiltersProps) => {
 
 	const handleMonthChange = (value: string) => {
 		setMonth(value);
-		onFilterChange({ month: value, year });
 	};
 
 	const handleYearChange = (value: string) => {
@@ -29,8 +28,6 @@ const ReportsFilter = ({ onFilterChange }: ReportFiltersProps) => {
 		if (value === currentYear.toString()) {
 			setMonth(String(new Date().getMonth() + 1));
 		}
-
-		onFilterChange({ month, year: value });
 	};
 
 	const getAvailableMonths = () => {

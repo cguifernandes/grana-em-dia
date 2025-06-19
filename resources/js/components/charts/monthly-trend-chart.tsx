@@ -44,7 +44,7 @@ const MonthlyTrendChart = ({
     data,
 }: MonthlyTrendChartProps) => {
     return (
-        <Card className={cn("gap-6 p-4 min-h-[250px]", className)}>
+        <Card className={cn("gap-6 p-4 min-h-[300px]", className)}>
             <CardHeader className="px-0">
                 <CardTitle>Tendências mensais</CardTitle>
                 <CardDescription>

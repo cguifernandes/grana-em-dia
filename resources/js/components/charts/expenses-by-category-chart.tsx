@@ -24,15 +24,13 @@ export type CategoryExpense = {
     name: string;
     value: number;
     fill: string;
+    percentage: number
 };
 
 type ExpensesByCategoryChartProps = {
     className?: string;
     data: CategoryExpense[];
     chartClassName?: string;
-    categories?: (Omit<CategoryType, "created_at" | "updated_at"> & {
-        amount: number;
-    })[];
     interactive?: boolean;
 };
 
@@ -47,7 +45,6 @@ const chartColors = [
 const ExpensesByCategoryChart = ({
     className,
     chartClassName,
-    categories,
     data,
     interactive = false,
 }: ExpensesByCategoryChartProps) => {
@@ -65,7 +62,7 @@ const ExpensesByCategoryChart = ({
     };
 
     return (
-        <Card className={cn("gap-6 p-4 min-h-[250px]", className)}>
+        <Card className={cn("gap-6 p-4 min-h-[300px]", className)}>
             <CardHeader className="px-0">
                 <CardTitle>Despesas por categoria</CardTitle>
                 <CardDescription>
@@ -146,45 +143,43 @@ const ExpensesByCategoryChart = ({
                                     />
                                 }
                             />
-                            {!interactive && (
-                                <ChartLegend
-                                    content={
-                                        <ChartLegendContent nameKey="name" />
-                                    }
-                                    className="-translate-y-2 hidden lg:flex flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-                                />
-                            )}
                         </PieChart>
                     </ChartContainer>
                 ) : (
                     <div className="flex items-center justify-center h-full">
                         <p className="text-sm">
-                            Nenhuma despesa por categoria encontrada
+                            Nenhum dado disponível para exibição
                         </p>
                     </div>
                 )}
             </CardContent>
 
-            {interactive && (
-                <CardFooter className="px-0">
-                    <div className="gap-2 grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                        {categories?.map((category) => (
-                            <CategoryCard
-                                id={category.id}
-                                key={category.id}
-                                amount={category.amount}
-                                name={category.name}
-                                color={category.color}
-                                icon={category.icon}
-                                onMouseEnter={() =>
-                                    handleMouseEnter(category.name)
-                                }
-                                onMouseLeave={handleMouseLeave}
-                            />
-                        ))}
-                    </div>
-                </CardFooter>
-            )}
+            <CardFooter className="px-0">
+                <div className="flex flex-wrap w-full gap-2">
+                    {
+                        data.map((categories) => (
+                            <div key={categories.fill + categories.name} className="flex min-w-64 gap-2 py-2 px-3 flex-1 items-center rounded-sm bg-muted">
+                                <div
+                                    className="size-4 rounded-full shrink-0"
+                                    style={{ backgroundColor: categories.fill }}
+                                />
+
+                                <div className="flex justify-between items-center w-full gap-4 min-w-0">
+                                    <h2 className="truncate text-sm min-w-0">
+                                    {categories.name}
+                                    </h2>
+
+                                    <div className="flex flex-col items-end text-right shrink-0">
+                                    <h2 className="text-sm">{formatCurrency(categories.value)}</h2>
+                                    <p className="text-xs text-muted-foreground">{categories.percentage}%</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        ))
+                    }
+                </div>
+            </CardFooter>
         </Card>
     );
 };

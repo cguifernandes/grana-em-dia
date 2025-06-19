@@ -20,12 +20,16 @@ type TrendAnalysisProps = {
 };
 
 const calculatePercentageChange = (values: number[]) => {
-	const [first, _, third] = values;
+	const [first, , third] = values;
+
+	if (first === 0) return "0.00"
+
 	const change = ((third - first) / first) * 100;
 	return change.toFixed(2);
 };
 
 const TrendAnalysis = ({ categories }: TrendAnalysisProps) => {
+	console.log(categories)
 	return (
 		<Card className="gap-6 flex-1 p-4">
 			<CardHeader className="px-0">

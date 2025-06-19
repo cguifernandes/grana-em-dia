@@ -79,6 +79,12 @@ class FinancesController extends Controller
             $month = date('m');
             $year = date('Y'); 
 
+            $totalExpense = $user->transactions()
+                ->where('type', 'expense')
+                ->whereYear('date', $year)
+                ->whereMonth('date', $month)
+                ->sum('amount');
+
             $expenses = $user->transactions()
                 ->selectRaw("category_id, SUM(amount) as total")
                 ->where('type', 'expense')
@@ -87,13 +93,15 @@ class FinancesController extends Controller
                 ->groupBy('category_id')
                 ->with('category:id,name,color')
                 ->get()
-                ->map(function ($item) {
+                ->map(function ($item) use ($totalExpense) {
                     return [
                         'name' => $item->category->name,
                         'fill' => $item->category->color,
                         'value' => (float) $item->total,
+                        'percentage' => $totalExpense > 0 ? round(($item->total / $totalExpense) * 100, 2) : 0,
                     ];
                 });
+
 
             return response()->json([
                 'success' => true,
@@ -195,6 +203,278 @@ class FinancesController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Erro ao buscar transações recentes.',
+            ], 500);
+        }
+    }
+
+    public function reportsMonthlyAnalysis(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            $month = $request->query('month');
+            $year = $request->query('year');
+
+            if (!$month || !$year || $month < 1 || $month > 12 || $year < 1900) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Parâmetros 'month' e 'year' são obrigatórios e devem ser válidos."
+                ], 400);
+            }
+
+            Carbon::setLocale('pt_BR');
+
+            $previousMonthDate = Carbon::createFromDate($year, $month, 1)->subMonth();
+            $prevMonth = $previousMonthDate->month;
+            $prevYear = $previousMonthDate->year;
+            $currentMonthName = Carbon::createFromDate($year, $month)->translatedFormat('F');
+            $previousMonthName = Carbon::createFromDate($year, $month)->subMonth()->translatedFormat('F');
+
+            $monthlyExpense = $user->transactions()
+                ->where('type', 'expense')
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->sum('amount');
+
+            $monthlyIncome = $user->transactions()
+                ->where('type', 'income')
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->sum('amount');
+                
+            $totalExpense = $user->transactions()
+                ->where('type', 'expense')
+                ->sum('amount');
+
+            $totalIncome = $user->transactions()
+                ->where('type', 'income')
+                ->sum('amount');
+
+            $topCategory = $user->transactions()
+                ->selectRaw('category_id, SUM(amount) as total')
+                ->where('type', 'expense')
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->groupBy('category_id')
+                ->orderByDesc('total')
+                ->with('category:id,name,icon,color') 
+                ->first();
+
+            $categoryComparison = $user->transactions()
+                ->selectRaw('category_id, type, SUM(amount) as total')
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->groupBy('category_id', 'type')
+                ->with('category:id,name')
+                ->get()
+                ->groupBy('category_id')
+                ->map(function ($items) {
+                    $category = $items->first()->category;
+
+                    return [
+                        'category' => $category->name,
+                        'income' => (float) ($items->firstWhere('type', 'income')->total ?? 0),
+                        'expense' => (float) ($items->firstWhere('type', 'expense')->total ?? 0),
+                    ];
+                })
+                ->values();
+
+            $currentData = $user->transactions()
+                ->selectRaw('category_id, type, SUM(amount) as total')
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->groupBy('category_id', 'type')
+                ->with('category:id,name')
+                ->get()
+                ->groupBy('category_id');
+
+            $previousData = $user->transactions()
+                ->selectRaw('category_id, type, SUM(amount) as total')
+                ->whereMonth('date', $prevMonth)
+                ->whereYear('date', $prevYear)
+                ->groupBy('category_id', 'type')
+                ->with('category:id,name')
+                ->get()
+                ->groupBy('category_id');
+
+            $allCategoryIds = $currentData->keys()->merge($previousData->keys())->unique();
+
+            $categoryMonthlyComparison = $allCategoryIds->map(function ($categoryId) use ($currentData, $previousData, $currentMonthName, $previousMonthName) {
+                $current = $currentData->get($categoryId);
+                $previous = $previousData->get($categoryId);
+
+                $category = $current?->first()->category ?? $previous?->first()->category;
+
+                return [
+                    'category' => $category?->name,
+                    'previous_month' => [
+                        'month' => strtolower($previousMonthName),
+                        'income' => (float) ($previous?->firstWhere('type', 'income')?->total ?? 0),
+                        'expense' => (float) ($previous?->firstWhere('type', 'expense')?->total ?? 0),
+                    ],
+                    'current_month' => [
+                        'month' => strtolower($currentMonthName),
+                        'income' => (float) ($current?->firstWhere('type', 'income')?->total ?? 0),
+                        'expense' => (float) ($current?->firstWhere('type', 'expense')?->total ?? 0),
+                    ],
+                ];
+            });
+
+            $saving = $monthlyIncome - $monthlyExpense;
+            $balance = $totalIncome - $totalExpense;
+
+            $expenseVariations = $allCategoryIds
+                ->map(function ($categoryId) use ($currentData, $previousData) {
+                    $current = $currentData->get($categoryId)?->firstWhere('type', 'expense');
+                    $previous = $previousData->get($categoryId)?->firstWhere('type', 'expense');
+
+                    $currentAmount = (float) ($current?->total ?? 0.0);
+                    $previousAmount = (float) ($previous?->total ?? 0.0);
+
+                    if ($previousAmount === 0.0) {
+                        return null;
+                    }
+
+                    $difference = $currentAmount - $previousAmount;
+                    $category = $current?->category ?? $previous?->category;
+
+                    if (!$category?->name) {
+                        return null;
+                    }
+
+                    return [
+                        'category' => $category->name,
+                        'current' => round($currentAmount, 2),
+                        'previous' => round($previousAmount, 2),
+                        'difference' => round($difference, 2),
+                        'positive' => $difference <= 0,
+                    ];
+                })
+                ->filter() 
+                ->values();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Relatório mensal carregado com sucesso.',
+                'data' => [
+                    'total_expense' => round($monthlyExpense, 2),
+                    'top_category' => $topCategory ? [
+                        'name' => $topCategory->category->name,
+                        'icon' => $topCategory->category->icon,
+                        'color' => $topCategory->category->color,
+                        'value' => round($topCategory->total, 2),
+                    ] : null,
+                    'saving' => round($saving, 2),
+                    'balance' => round($balance, 2),
+                    'category_comparison' => $categoryComparison,
+                    'category_monthly_comparison' => $categoryMonthlyComparison->values(),
+                    'expense_variation_by_category'=> $expenseVariations->isEmpty() ? null : $expenseVariations,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Erro ao buscar relatório mensal: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao buscar relatório mensal.',
+            ], 500);
+        }
+    }
+
+    public function reportsCategories(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            $month = $request->query('month');
+            $year = $request->query('year');
+
+            if (!$month || !$year || $month < 1 || $month > 12 || $year < 1900) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Parâmetros 'month' e 'year' são obrigatórios e devem ser válidos."
+                ], 400);
+            }
+
+            Carbon::setLocale('pt_BR');
+
+            $dates = collect();
+            for ($i = 2; $i >= 0; $i--) {
+                $date = Carbon::createFromDate($year, $month, 1)->subMonths($i);
+                $dates->push(['month' => $date->month, 'year' => $date->year]);
+            }
+
+            $totalExpense = $user->transactions()
+                ->where('type', 'expense')
+                ->whereYear('date', $year)
+                ->whereMonth('date', $month)
+                ->sum('amount');
+
+            $categories = $user->transactions()
+                ->selectRaw("category_id, SUM(amount) as total")
+                ->where('type', 'expense')
+                ->whereYear('date', $year)
+                ->whereMonth('date', $month)
+                ->groupBy('category_id')
+                ->with('category:id,name,color')
+                ->get()
+                ->map(function ($item) use ($totalExpense) {
+                    return [
+                        'name' => $item->category->name,
+                        'fill' => $item->category->color,
+                        'value' => (float) $item->total,
+                        'percentage' => $totalExpense > 0 ? round(($item->total / $totalExpense) * 100, 2) : 0,
+                    ];
+                });
+
+            $transactionsThreeMonths = $user->transactions()
+                ->selectRaw("category_id, MONTH(date) as month, YEAR(date) as year, SUM(amount) as total")
+                ->where('type', 'expense')
+                ->where(function ($query) use ($dates) {
+                    foreach ($dates as $date) {
+                        $query->orWhere(function ($q) use ($date) {
+                            $q->whereMonth('date', $date['month'])
+                            ->whereYear('date', $date['year']);
+                        });
+                    }
+                })
+                ->groupBy('category_id', 'month', 'year')
+                ->with('category:id,name,color')
+                ->get();
+
+            $trends = $transactionsThreeMonths->groupBy('category_id')->map(function ($items) use ($dates) {
+                $first = $items->first();
+                $category = $first->category;
+
+                $values = $dates->map(function ($date) use ($items) {
+                    $match = $items->firstWhere(fn ($item) =>
+                        (int)$item->month === $date['month'] && (int)$item->year === $date['year']
+                    );
+                    return (float) ($match->total ?? 0);
+                });
+
+                return [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'color' => $category->color,
+                    'values' => $values->toArray(),
+                ];
+            })->values();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Relatório de categorias carregado com sucesso.',
+                'data' => [
+                    'categories' => $categories,
+                    'trends' => $trends
+                ],
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Erro ao buscar relatório de categorias: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao carregar relatório de categorias.',
             ], 500);
         }
     }

@@ -17,6 +17,8 @@ import { toast } from "sonner";
 const Home = () => {
     const { dashboard, flash } = usePage<PageProps>().props;
 
+    console.log(dashboard)
+
     useEffect(() => {
         if (flash.error) {
             toast.error(flash.error);

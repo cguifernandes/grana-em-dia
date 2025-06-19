@@ -14,7 +14,7 @@ const DashboardLayout = ({ children, title }: DashboardLayoutProps) => {
 				<SideBar />
 				<div className="flex flex-col items-center flex-1">
 					<Header title={title} />
-					<div className="w-full bg-neutral-50 max-w-7xl pt-20 p-5 dark:bg-neutral-900">
+					<div className="w-full flex-1 bg-neutral-50 max-w-7xl pt-20 p-5 dark:bg-neutral-900">
 						{children}
 					</div>
 				</div>

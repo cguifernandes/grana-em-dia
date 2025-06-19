@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { formatCurrency } from "@/utils/functions";
+import { CSSProperties } from "react";
 
 type BalanceCardProps = {
 	title: string;
@@ -11,12 +12,14 @@ type BalanceCardProps = {
 	isPercentage?: boolean;
 	text?: string;
 	textClassName?: string;
-	description: string
+	description: string;
+	styleIcon?: CSSProperties
 };
 
 const BalanceCard = ({
 	amount,
 	title,
+	styleIcon,
 	icon,
 	className,
 	iconClassName,
@@ -32,7 +35,7 @@ const BalanceCard = ({
 		<Card className={cn("gap-2 p-4", className)}>
 			<CardHeader className="pb-2 flex px-0 flex-row items-center justify-between">
 				<CardTitle className="text-base">{title}</CardTitle>
-				<div className={cn("p-1.5 rounded-md", iconClassName)}>{icon}</div>
+				<div style={styleIcon} className={cn("p-1.5 rounded-md", iconClassName)}>{icon}</div>
 			</CardHeader>
 			<CardContent className="px-0">
 				<h2

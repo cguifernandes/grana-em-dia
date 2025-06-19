@@ -52,7 +52,18 @@ class FinancesController extends Controller
                     'income' => (float) $income,
                     'expense' => (float) $expense,
                 ];
+            }
 
+            $hasValues = collect($monthlyTrends)->every(function ($trend) {
+                return $trend['income'] == 0 && $trend['expense'] == 0;
+            });
+
+            if ($hasValues) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Dados financeiros carregados com sucesso.',
+                    'data' => []
+                ]);
             }
 
             return response()->json([
@@ -385,39 +396,46 @@ class FinancesController extends Controller
     {
         try {
             $user = Auth::user();
-
-            $month = $request->query('month');
-            $year = $request->query('year');
-
+    
+            $month = (int) $request->query('month');
+            $year = (int) $request->query('year');
+    
             if (!$month || !$year || $month < 1 || $month > 12 || $year < 1900) {
                 return response()->json([
                     'success' => false,
                     'message' => "Parâmetros 'month' e 'year' são obrigatórios e devem ser válidos."
                 ], 400);
             }
-
+    
             Carbon::setLocale('pt_BR');
 
+            $driver = DB::getDriverName();
+    
             $dates = collect();
             for ($i = 2; $i >= 0; $i--) {
                 $date = Carbon::createFromDate($year, $month, 1)->subMonths($i);
                 $dates->push(['month' => $date->month, 'year' => $date->year]);
             }
 
+            $dateFormat = $driver === 'pgsql'
+                ? "TO_CHAR(date, 'YYYY-MM')"
+                : "DATE_FORMAT(date, '%Y-%m')";
+    
             $totalExpense = $user->transactions()
                 ->where('type', 'expense')
                 ->whereYear('date', $year)
                 ->whereMonth('date', $month)
                 ->sum('amount');
-
+    
             $categories = $user->transactions()
                 ->selectRaw("category_id, SUM(amount) as total")
+                ->with('category')
                 ->where('type', 'expense')
                 ->whereYear('date', $year)
                 ->whereMonth('date', $month)
                 ->groupBy('category_id')
-                ->with('category:id,name,color')
                 ->get()
+                ->filter(fn($item) => $item->category)
                 ->map(function ($item) use ($totalExpense) {
                     return [
                         'name' => $item->category->name,
@@ -426,41 +444,43 @@ class FinancesController extends Controller
                         'percentage' => $totalExpense > 0 ? round(($item->total / $totalExpense) * 100, 2) : 0,
                     ];
                 });
-
+    
             $transactionsThreeMonths = $user->transactions()
-                ->selectRaw("category_id, MONTH(date) as month, YEAR(date) as year, SUM(amount) as total")
+                ->selectRaw("category_id, EXTRACT(MONTH FROM date) as month, EXTRACT(YEAR FROM date) as year, SUM(amount) as total")
+                ->with('category')
                 ->where('type', 'expense')
                 ->where(function ($query) use ($dates) {
                     foreach ($dates as $date) {
                         $query->orWhere(function ($q) use ($date) {
                             $q->whereMonth('date', $date['month'])
-                            ->whereYear('date', $date['year']);
+                              ->whereYear('date', $date['year']);
                         });
                     }
                 })
                 ->groupBy('category_id', 'month', 'year')
-                ->with('category:id,name,color')
                 ->get();
-
+    
             $trends = $transactionsThreeMonths->groupBy('category_id')->map(function ($items) use ($dates) {
                 $first = $items->first();
                 $category = $first->category;
-
+    
+                if (!$category) return null;
+    
                 $values = $dates->map(function ($date) use ($items) {
                     $match = $items->firstWhere(fn ($item) =>
-                        (int)$item->month === $date['month'] && (int)$item->year === $date['year']
+                        (int) $item->month === $date['month'] && (int) $item->year === $date['year']
                     );
                     return (float) ($match->total ?? 0);
                 });
-
+    
                 return [
                     'id' => $category->id,
                     'name' => $category->name,
                     'color' => $category->color,
                     'values' => $values->toArray(),
                 ];
-            })->values();
-
+            })->filter()->values();
+    
             return response()->json([
                 'success' => true,
                 'message' => 'Relatório de categorias carregado com sucesso.',
@@ -471,12 +491,13 @@ class FinancesController extends Controller
             ]);
         } catch (\Exception $e) {
             \Log::error('Erro ao buscar relatório de categorias: ' . $e->getMessage());
-
+    
             return response()->json([
                 'success' => false,
                 'message' => 'Erro ao carregar relatório de categorias.',
             ], 500);
         }
     }
+    
 
 }

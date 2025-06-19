@@ -1,29 +1,11 @@
-import BalanceCard from "@/components/layout/balance-card";
 import DashboardLayout from "@/components/layout/dashboard-layout";
 import ReportsFilter from "@/components/layout/reports-filter";
-import { ArrowDownRight, PiggyBank, ShoppingCart, Wallet } from "lucide-react";
 import { Head, usePage } from "@inertiajs/react";
-import CategoryMonthlyComparisonChart, {
-    MonthlyComparison,
-} from "@/components/charts/category-monthly-comparison-chart";
-import ComparisonLastMonthChart, {
-    ComparisonLastMonth,
-} from "@/components/charts/comparison-last-month-chart";
-import ReportsVariations, {
-    Variations,
-} from "@/components/layout/reports-variations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ExpensesByCategoryChart, {
-    CategoryExpense,
-} from "@/components/charts/expenses-by-category-chart";
-import TrendAnalysis, { TrendData } from "@/components/layout/trend-analysis";
-import { ApiResponse, CategoryType, MonthlyAnalysisType } from "@/types/types";
-import { CategoryColors } from "@/utils/enums";
 import TransactionList, {
     Transaction,
 } from "@/components/layout/transaction-list";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 import MonthlyAnalysis from "@/components/reports/monthly-analysis";
 import Categories from "@/components/reports/categories";
 
@@ -88,15 +70,15 @@ const mockTransactions: Transaction[] = [
 
 const Reports = () => {
     const url = usePage().url;
-    const currentMonth = new Date().getMonth() + 1
-    const currentYear = new Date().getFullYear()
-    const [month, setMonth] = useState<string>(currentMonth.toString())
-    const [year, setYear] = useState<string>(currentYear.toString())
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+    const [month, setMonth] = useState<string>(currentMonth.toString());
+    const [year, setYear] = useState<string>(currentYear.toString());
     const defaultTab = url.split("?")[1]?.split("=")[1] || "monthly";
 
     const handleFilterChange = (filters: { month: string; year: string }) => {
-        setYear(filters.year)
-        setMonth(filters.month)
+        setYear(filters.year);
+        setMonth(filters.month);
     };
 
     return (

@@ -54,86 +54,94 @@ const MonthlyTrendChart = ({
             </CardHeader>
 
             <CardContent className="px-0 h-full">
-                <ChartContainer
-                    className={cn("!m-auto max-h-[300px]", chartClassName)}
-                    config={chartConfig}
-                >
-                    <AreaChart
-                        accessibilityLayer
-                        data={data}
-                        margin={{
-                            left: 12,
-                            right: 12,
-                        }}
+                {data.length > 0 ? (
+                    <ChartContainer
+                        className={cn("!m-auto max-h-[300px]", chartClassName)}
+                        config={chartConfig}
                     >
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="month"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={4}
-                            tickFormatter={(value) => value.slice(0, 3)}
-                        />
-                        <ChartTooltip
-                            cursor={false}
-                            content={
-                                <ChartTooltipContent
-                                    formatter={(value, name, item) => {
-                                        const formatValue = formatCurrency(
-                                            Number(value),
-                                        );
+                        <AreaChart
+                            accessibilityLayer
+                            data={data}
+                            margin={{
+                                left: 12,
+                                right: 12,
+                            }}
+                        >
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="month"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={4}
+                                tickFormatter={(value) => value.slice(0, 3)}
+                            />
+                            <ChartTooltip
+                                cursor={false}
+                                content={
+                                    <ChartTooltipContent
+                                        formatter={(value, name, item) => {
+                                            const formatValue = formatCurrency(
+                                                Number(value),
+                                            );
 
-                                        return (
-                                            <div className="flex items-center justify-between w-full text-xs text-muted-foreground">
-                                                <div className="flex items-center gap-x-1">
-                                                    <div
-                                                        className={cn(
-                                                            "shrink-0 rounded-[2px] h-2.5 w-2.5 border-(--color-border) bg-(--color-bg)",
-                                                        )}
-                                                        style={
-                                                            {
-                                                                "--color-bg":
-                                                                    item.color,
-                                                                "--color-border":
-                                                                    item.color,
-                                                            } as React.CSSProperties
+                                            return (
+                                                <div className="flex items-center justify-between w-full text-xs text-muted-foreground">
+                                                    <div className="flex items-center gap-x-1">
+                                                        <div
+                                                            className={cn(
+                                                                "shrink-0 rounded-[2px] h-2.5 w-2.5 border-(--color-border) bg-(--color-bg)",
+                                                            )}
+                                                            style={
+                                                                {
+                                                                    "--color-bg":
+                                                                        item.color,
+                                                                    "--color-border":
+                                                                        item.color,
+                                                                } as React.CSSProperties
+                                                            }
+                                                        />
+                                                        {
+                                                            chartConfig[
+                                                                name as keyof typeof chartConfig
+                                                            ]?.label
                                                         }
-                                                    />
-                                                    {
-                                                        chartConfig[
-                                                            name as keyof typeof chartConfig
-                                                        ]?.label
-                                                    }
+                                                    </div>
+                                                    <span className="font-mono font-medium tabular-nums text-foreground">
+                                                        {formatValue}
+                                                    </span>
                                                 </div>
-                                                <span className="font-mono font-medium tabular-nums text-foreground">
-                                                    {formatValue}
-                                                </span>
-                                            </div>
-                                        );
-                                    }}
-                                    className="w-48"
-                                    indicator="dot"
-                                />
-                            }
-                        />
-                        <Area
-                            dataKey="income"
-                            type="natural"
-                            fill="var(--color-income)"
-                            fillOpacity={0.4}
-                            stroke="var(--color-income)"
-                            stackId="a"
-                        />
-                        <Area
-                            dataKey="expense"
-                            type="natural"
-                            fill="var(--color-expense)"
-                            fillOpacity={0.4}
-                            stroke="var(--color-expense)"
-                            stackId="b"
-                        />
-                    </AreaChart>
-                </ChartContainer>
+                                            );
+                                        }}
+                                        className="w-48"
+                                        indicator="dot"
+                                    />
+                                }
+                            />
+                            <Area
+                                dataKey="income"
+                                type="natural"
+                                fill="var(--color-income)"
+                                fillOpacity={0.4}
+                                stroke="var(--color-income)"
+                                stackId="a"
+                            />
+                            <Area
+                                dataKey="expense"
+                                type="natural"
+                                fill="var(--color-expense)"
+                                fillOpacity={0.4}
+                                stroke="var(--color-expense)"
+                                stackId="b"
+                            />
+                        </AreaChart>
+                    </ChartContainer>
+                ) : (
+                    <div className="flex items-center justify-center h-full">
+                        <p className="text-sm">
+                            Nenhum dado disponível para exibição
+                        </p>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );

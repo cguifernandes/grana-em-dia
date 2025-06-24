@@ -2,6 +2,7 @@ import { MonthlyComparison } from "@/components/charts/category-monthly-comparis
 import { ComparisonLastMonth } from "@/components/charts/comparison-last-month-chart";
 import { CategoryExpense } from "@/components/charts/expenses-by-category-chart";
 import { MonthlyTrend } from "@/components/charts/monthly-trend-chart";
+import { MonthlySummaryType } from "@/components/layout/monthly-summary";
 import { Variations } from "@/components/layout/reports-variations";
 import { Transaction } from "@/components/layout/transaction-list";
 import { TrendData } from "@/components/layout/trend-analysis";
@@ -73,6 +74,7 @@ export type MonthlyAnalysisType = {
 export type CategoriesType = {
 	categories: CategoryExpense[];
 	trends: TrendData[]
+	summary: MonthlySummaryType
 }
 
 export type TransactionType = {

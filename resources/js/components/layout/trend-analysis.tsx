@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { Button } from "../ui/button";
 import {
 	Card,
 	CardContent,
@@ -29,7 +31,10 @@ const calculatePercentageChange = (values: number[]) => {
 };
 
 const TrendAnalysis = ({ categories }: TrendAnalysisProps) => {
-	console.log(categories)
+	const [showAll, setShowAll] = useState(false);
+
+	const displayedCategories = showAll ? categories : categories.slice(0, 3);
+
 	return (
 		<Card className="gap-6 flex-1 p-4">
 			<CardHeader className="px-0">
@@ -39,8 +44,8 @@ const TrendAnalysis = ({ categories }: TrendAnalysisProps) => {
 				</CardDescription>
 			</CardHeader>
 
-			<CardContent className="px-0 gap-4 flex flex-col">
-				{categories.map((category) => (
+			<CardContent className="px-0 gap-4 h-full flex flex-col">
+				{displayedCategories.length > 0 ? displayedCategories.map((category) => (
 					<div className="w-full flex flex-col gap-y-1" key={category.id}>
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-x-2">
@@ -65,13 +70,32 @@ const TrendAnalysis = ({ categories }: TrendAnalysisProps) => {
 						/>
 						<div className="flex justify-between items-center">
 							{category.values.map((value, index) => (
-								<span className="text-sm text-muted-foreground" key={index}>
+								<span
+									className="text-sm text-muted-foreground"
+									key={index}
+									style={{ flex: index !== 1 ? 1 : 0, textAlign: index === 2 ? "end" : "start" }}
+								>
 									{formatCurrency(value)}
 								</span>
 							))}
 						</div>
 					</div>
-				))}
+				)) : <div className="flex items-center justify-center h-full">
+                        <p className="text-sm">
+                            Nenhum dado disponível para exibição
+                        </p>
+                    </div>}
+				
+				 {categories.length > 3 && (
+					<Button
+						variant="link"
+						size="sm"
+						className="w-fit !mx-auto"
+						onClick={() => setShowAll(!showAll)}
+					>
+						{showAll ? "Ver menos" : "Ver mais"}
+					</Button>
+				 )}
 			</CardContent>
 		</Card>
 	);

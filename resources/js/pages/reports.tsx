@@ -8,6 +8,7 @@ import TransactionList, {
 import { useState } from "react";
 import MonthlyAnalysis from "@/components/reports/monthly-analysis";
 import Categories from "@/components/reports/categories";
+import Transactions from "@/components/reports/transactions";
 
 const mockTransactions: Transaction[] = [
     {
@@ -117,13 +118,7 @@ const Reports = () => {
                             </TabsContent>
 
                             <TabsContent value="transactions">
-                                <TransactionList
-                                    showAll
-                                    data={{
-                                        transactions: mockTransactions,
-                                        balance: 1000,
-                                    }}
-                                />
+                                <Transactions month={month} year={year} />
                             </TabsContent>
                         </Tabs>
                     </>

@@ -1,35 +1,31 @@
 import { ApiResponse, CategoriesType } from "@/types/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import ExpensesByCategoryChart from "../charts/expenses-by-category-chart";
-import TrendAnalysis from "../layout/trend-analysis";
-import MonthlySummary from "../layout/monthly-summary";
+import TransactionList, { Transaction } from "../layout/transaction-list";
 
-type CategoriesProps = {
+type TransactionsProps = {
     year: string;
     month: string;
 };
 
-const Categories = ({ month, year }: CategoriesProps) => {
+const Transactions = ({ month, year }: TransactionsProps) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [categoriesData, setCategoriesData] = useState<CategoriesType | null>(
-        null,
-    );
+    const [transactionsData, setTransactionsData] = useState<{ transactions: Transaction[]; balance: number } | null>(null);
 
     useEffect(() => {
         setIsLoading(true);
-        setCategoriesData(null);
+        setTransactionsData(null);
 
-        fetch(`/reports/categories?month=${month}&year=${year}`)
+        fetch(`/reports/transactions?month=${month}&year=${year}`)
             .then(async (response) => {
                 const data =
-                    (await response.json()) as ApiResponse<CategoriesType>;
+                    (await response.json()) as ApiResponse<{ transactions: Transaction[]; balance: number }>;
 
                 if (!response.ok || !data.success) {
                     toast.error(data.message);
                 }
 
-                setCategoriesData(data.data);
+                setTransactionsData(data.data);
             })
             .catch((error: Error) => {
                 console.log(error);
@@ -40,7 +36,7 @@ const Categories = ({ month, year }: CategoriesProps) => {
             });
     }, [year, month]);
 
-    if (isLoading || !categoriesData) {
+    if (isLoading || !transactionsData) {
         return (
             <div className="flex items-center justify-center w-full h-full">
                 <div role="status">
@@ -68,18 +64,12 @@ const Categories = ({ month, year }: CategoriesProps) => {
 
     return (
         <>
-            <ExpensesByCategoryChart
-                className="flex-1"
-                data={categoriesData.categories}
-                chartClassName="max-h-[300px]"
+            <TransactionList
+                showAll
+                data={transactionsData}
             />
-
-            <div className="flex gap-x-2">
-                <TrendAnalysis categories={categoriesData.trends} />
-                <MonthlySummary data={categoriesData.summary} />
-            </div>
         </>
     );
 };
 
-export default Categories;
+export default Transactions;

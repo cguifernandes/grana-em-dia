@@ -480,13 +480,63 @@ class FinancesController extends Controller
                     'values' => $values->toArray(),
                 ];
             })->filter()->values();
+
+            $currentMonthDate = Carbon::createFromDate($year, $month, 1);
+            $previousMonthDate = $currentMonthDate->copy()->subMonth();
+
+            $currentMonthTotal = $totalExpense;
+            $previousMonthTotal = $user->transactions()
+                ->where('type', 'expense')
+                ->whereYear('date', $previousMonthDate->year)
+                ->whereMonth('date', $previousMonthDate->month)
+                ->sum('amount');
+
+            $percentageChange = $previousMonthTotal > 0
+                ? round((($currentMonthTotal - $previousMonthTotal) / $previousMonthTotal) * 100, 2)
+                : null;
+
+            $categoryMostSpent = $categories->sortByDesc('value')->first();
+            $categoryLeastSpent = $categories->sortBy('value')->first();
+
+            $categoryMostSpent = $categoryMostSpent ? [
+                'name' => $categoryMostSpent['name'],
+                'color' => $categoryMostSpent['fill'],
+                'value' => $categoryMostSpent['value'],
+                'percentage' => $categoryMostSpent['percentage'],
+            ] : null;
+
+            $categoryLeastSpent = $categoryLeastSpent ? [
+                'name' => $categoryLeastSpent['name'],
+                'color' => $categoryLeastSpent['fill'],
+                'value' => $categoryLeastSpent['value'],
+                'percentage' => $categoryLeastSpent['percentage'],
+            ] : null;
+
+            $averagePerCategory = $categories->count() > 0
+                ? round($categories->sum('value') / $categories->count(), 2)
+                : 0;
+
+            $daysInMonth = $currentMonthDate->daysInMonth;
+            $averagePerDay = $daysInMonth > 0
+                ? round($currentMonthTotal / $daysInMonth, 2)
+                : 0;
+
+            $summary = [
+                'total_current_month' => $currentMonthTotal,
+                'percent_change_from_last_month' => $percentageChange,
+                'most_spent_category' => $categoryMostSpent,
+                'least_spent_category' => $categoryLeastSpent,
+                'average_per_category' => $averagePerCategory,
+                'average_per_day' => $averagePerDay,
+            ];
     
             return response()->json([
                 'success' => true,
                 'message' => 'Relatório de categorias carregado com sucesso.',
                 'data' => [
                     'categories' => $categories,
-                    'trends' => $trends
+                    'trends' => $trends,
+                    'summary' => $summary,
                 ],
             ]);
         } catch (\Exception $e) {
@@ -498,6 +548,70 @@ class FinancesController extends Controller
             ], 500);
         }
     }
-    
 
+    public function monthlyTransactions(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            $month = $request->input('month');
+            $year = $request->input('year');
+
+            if (!$month || !$year) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mês e ano são obrigatórios.',
+                ], 400);
+            }
+
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+
+            $transactions = $user->transactions()
+                ->with('category:id,name,icon')
+                ->whereBetween('date', [$startDate, $endDate])
+                ->orderBy('date', 'desc')
+                ->orderBy('id', 'desc')
+                ->get()
+                ->map(function ($t) {
+                    return [
+                        'id' => (string) $t->id,
+                        'description' => $t->description,
+                        'amount' => (float) $t->amount,
+                        'category' => [
+                            'name' => $t->category->name,
+                            'icon' => $t->category->icon,
+                        ],
+                        'date' => Carbon::parse($t->date)->toDateString(),
+                        'type' => $t->type,
+                    ];
+                });
+
+            $income = $user->transactions()
+                ->where('type', 'income')
+                ->whereBetween('date', [$startDate, $endDate])
+                ->sum('amount');
+
+            $expense = $user->transactions()
+                ->where('type', 'expense')
+                ->whereBetween('date', [$startDate, $endDate])
+                ->sum('amount');
+
+            $balance = $income - $expense;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Transações do mês carregadas com sucesso.',
+                'data' => [
+                    'transactions' => $transactions,
+                    'balance' => $balance,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao buscar transações do mês.',
+            ], 500);
+        }
+    }
 }

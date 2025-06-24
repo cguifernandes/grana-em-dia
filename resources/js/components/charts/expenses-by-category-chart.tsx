@@ -149,20 +149,20 @@ const ExpensesByCategoryChart = ({
                     {data.map((categories) => (
                         <div
                             key={categories.fill + categories.name}
-                            className="flex min-w-64 gap-2 py-2 px-3 flex-1 items-center rounded-sm bg-muted"
+                            className="flex min-w-64 gap-2 py-1 px-2 flex-1 items-center rounded-sm bg-muted"
                         >
                             <div
-                                className="size-4 rounded-full shrink-0"
+                                className="size-3 rounded-full shrink-0"
                                 style={{ backgroundColor: categories.fill }}
                             />
 
                             <div className="flex justify-between items-center w-full gap-4 min-w-0">
-                                <h2 className="truncate text-sm min-w-0">
+                                <h2 className="truncate text-xs min-w-0">
                                     {categories.name}
                                 </h2>
 
                                 <div className="flex flex-col items-end text-right shrink-0">
-                                    <h2 className="text-sm">
+                                    <h2 className="text-xs">
                                         {formatCurrency(categories.value)}
                                     </h2>
                                     <p className="text-xs text-muted-foreground">

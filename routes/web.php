@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/reports/monthly-analysis', [FinancesController::class, 'reportsMonthlyAnalysis'])->name('finances.monthly-analysis');
     Route::get('/reports/categories', [FinancesController::class, 'reportsCategories'])->name('finances.categories');
+    Route::get('/reports/transactions', [FinancesController::class, 'monthlyTransactions'])->name('finances.transactions');
 });
 
 Route::middleware('guest')->group(function () {

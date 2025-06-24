@@ -52,11 +52,11 @@ const TransactionList = ({
     const totalPages = Math.ceil(data.transactions.length / ITEMS_PER_PAGE);
 
     const displayedTransactions = showAll
-        ? data.transactions.slice(
-              (currentPage - 1) * ITEMS_PER_PAGE,
-              currentPage * ITEMS_PER_PAGE,
-          )
-        : data.transactions.slice(0, ITEMS_PER_PAGE);
+        ? data.transactions
+        : data.transactions.slice(
+            (currentPage - 1) * ITEMS_PER_PAGE,
+            currentPage * ITEMS_PER_PAGE,
+        );
 
     const handlePreviousPage = () => {
         if (currentPage > 1) {
@@ -110,18 +110,18 @@ const TransactionList = ({
                                     >
                                         {renderIcon(transaction.category.icon)}
                                     </div>
-                                    <div className="flex flex-col gap-y-1 min-w-0">
-                                        <h3 className="leading-none font-medium truncate">
+                                    <div className="flex flex-col min-w-0">
+                                        <h3 className="font-medium truncate">
                                             {transaction.description}
                                         </h3>
                                         <div className="flex items-center text-sm gap-x-2 flex-wrap">
-                                            <span className="text-muted-foreground leading-none">
+                                            <span className="text-muted-foreground">
                                                 {transaction.category.name}
                                             </span>
-                                            <span className="text-muted-foreground leading-none">
+                                            <span className="text-muted-foreground">
                                                 •
                                             </span>
-                                            <span className="text-muted-foreground leading-none">
+                                            <span className="text-muted-foreground">
                                                 {transaction.date}
                                             </span>
                                         </div>
@@ -175,7 +175,7 @@ const TransactionList = ({
                     )}
                 </div>
 
-                {showAll && totalPages > 1 && (
+                {!showAll && totalPages > 1 && (
                     <Pagination className="py-4">
                         <PaginationContent>
                             <PaginationPrevious
@@ -208,7 +208,7 @@ const TransactionList = ({
                 <div
                     className={cn(
                         "flex justify-between items-center p-3 border border-border rounded-md",
-                        !showAll && "!mt-4",
+                        showAll && "!mt-4",
                     )}
                 >
                     <span>Saldo</span>

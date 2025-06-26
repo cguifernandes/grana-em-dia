@@ -15,6 +15,8 @@ import { toast } from "sonner";
 const Profile = () => {
     const { auth, flash } = usePage<PageProps>().props;
 
+    console.log(flash);
+
     useEffect(() => {
         if (flash.success) {
             toast.success(flash.success);

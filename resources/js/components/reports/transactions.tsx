@@ -1,4 +1,4 @@
-import { ApiResponse, CategoriesType } from "@/types/types";
+import { ApiResponse } from "@/types/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import TransactionList, { Transaction } from "../layout/transaction-list";
@@ -10,7 +10,10 @@ type TransactionsProps = {
 
 const Transactions = ({ month, year }: TransactionsProps) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [transactionsData, setTransactionsData] = useState<{ transactions: Transaction[]; balance: number } | null>(null);
+    const [transactionsData, setTransactionsData] = useState<{
+        transactions: Transaction[];
+        balance: number;
+    } | null>(null);
 
     useEffect(() => {
         setIsLoading(true);
@@ -18,8 +21,10 @@ const Transactions = ({ month, year }: TransactionsProps) => {
 
         fetch(`/reports/transactions?month=${month}&year=${year}`)
             .then(async (response) => {
-                const data =
-                    (await response.json()) as ApiResponse<{ transactions: Transaction[]; balance: number }>;
+                const data = (await response.json()) as ApiResponse<{
+                    transactions: Transaction[];
+                    balance: number;
+                }>;
 
                 if (!response.ok || !data.success) {
                     toast.error(data.message);
@@ -64,10 +69,7 @@ const Transactions = ({ month, year }: TransactionsProps) => {
 
     return (
         <>
-            <TransactionList
-                showAll
-                data={transactionsData}
-            />
+            <TransactionList showAll data={transactionsData} />
         </>
     );
 };

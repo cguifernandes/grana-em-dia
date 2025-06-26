@@ -54,9 +54,9 @@ const TransactionList = ({
     const displayedTransactions = showAll
         ? data.transactions
         : data.transactions.slice(
-            (currentPage - 1) * ITEMS_PER_PAGE,
-            currentPage * ITEMS_PER_PAGE,
-        );
+              (currentPage - 1) * ITEMS_PER_PAGE,
+              currentPage * ITEMS_PER_PAGE,
+          );
 
     const handlePreviousPage = () => {
         if (currentPage > 1) {
@@ -122,7 +122,9 @@ const TransactionList = ({
                                                 •
                                             </span>
                                             <span className="text-muted-foreground">
-                                                {transaction.date}
+                                                {new Date(
+                                                    transaction.date,
+                                                ).toLocaleDateString("pt-BR")}
                                             </span>
                                         </div>
                                     </div>

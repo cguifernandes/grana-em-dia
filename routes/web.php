@@ -14,7 +14,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::put('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/categories', [CategoriesController::class, 'index'])->name('category');
     Route::post('/categories', [CategoriesController::class, 'store'])->name('category.store');

@@ -21,13 +21,18 @@ class ProfileController extends Controller
             abort(403, 'Acesso não autorizado.');
         }
 
-        $validated = $request->validate([
+        $rules = [
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'currentPassword' => 'required|string',
-            'newPassword' => 'required|string|max:8',
-            'passwordConfirmation' => 'required|same:newPassword',
-        ], [
+        ];
+
+        if ($request->filled('currentPassword') || $request->filled('newPassword') || $request->filled('passwordConfirmation')) {
+            $rules['currentPassword'] = 'required|string';
+            $rules['newPassword'] = 'required|string|max:8';
+            $rules['passwordConfirmation'] = 'required|same:newPassword';
+        }
+
+        $validated = $request->validate($rules, [
             'name.required' => 'Este campo é obrigatório.',
             'name.string' => 'O campo nome deve ser uma string.',
             'email.required' => 'Este campo é obrigatório.',
@@ -40,16 +45,20 @@ class ProfileController extends Controller
             'passwordConfirmation.same' => 'As senhas não coincidem.',
         ]);
 
-        if (!\Hash::check($validated['currentPassword'], $user->password)) {
-            return back()->withErrors(['currentPassword' => 'Senha atual incorreta.']);
-        }
-    
-        $user->update([
+        $data = [
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => bcrypt($validated['newPassword']),
-        ]);
-    
+        ];
+
+        if (!empty($validated['currentPassword']) && !empty($validated['newPassword'])) {
+            if (!\Hash::check($validated['currentPassword'], $user->password)) {
+                return back()->withErrors(['currentPassword' => 'Senha atual incorreta.']);
+            }
+            $data['password'] = bcrypt($validated['newPassword']);
+        }
+
+        $user->update($data);
+
         return back()->with('success', 'Perfil atualizado com sucesso!');
     }
 }
